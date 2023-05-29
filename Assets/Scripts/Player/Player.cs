@@ -1,28 +1,34 @@
-﻿using System;
-using Cinemachine;
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using Signals;
+using Triggers;
 using UnityEngine;
 using Zenject;
+
 
 namespace Player
 {
     public class Player : MonoBehaviour
     {
-        private CinemachineVirtualCamera _camera;
+        private PlayerAnimator _animator;
+        private Joystick _joystick;
+        private SignalBus _signalBus;
+        
         [Inject]
-        public void Construct(CinemachineVirtualCamera camera)
+        public void Construct(PlayerAnimator animator, Joystick joystick, SignalBus signalBus)
         {
-            _camera = camera;
+            _animator = animator;
+            _joystick = joystick;
+            _signalBus = signalBus;
         }
 
-        private void Start()
+        private async void OnTriggerEnter(Collider other)
         {
-            SetCamera();
-        }
-
-        private void SetCamera()
-        {
-            _camera.m_Follow = transform;
-            _camera.m_LookAt = transform;
+            if (other.TryGetComponent(out Work component))
+            {
+                //todo добавить задержку и прогресс бар
+                _signalBus.Fire(new WorkSignal(component.gameObject));
+            }
         }
     }
 }
