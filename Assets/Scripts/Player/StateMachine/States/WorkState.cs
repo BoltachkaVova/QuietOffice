@@ -10,7 +10,8 @@ namespace Player
 {
     public class WorkState : IState, IInitializable, IDisposable
     {
-        private GameObject _gameObject;
+        private Transform _triggerTransform;
+        private Transform _objTransform;
         
         private readonly PlayerAnimator _animator;
         private readonly Player _player;
@@ -37,31 +38,37 @@ namespace Player
         
         public async void Enter()
         {
-            _joystick.OnPointerUp(null);
             _joystick.gameObject.SetActive(false);
             
-            var rotation = _gameObject.transform.localRotation;
-            var position = _gameObject.transform.position;
+            var rotation = _triggerTransform.localRotation;
+            var position = _triggerTransform.position;
 
-            await _player.transform.DOMove(new Vector3(position.x, 0, position.z), 1f);
+            await _player.transform.DOMove(new Vector3(position.x, 0, position.z), 0.5f);
+            _joystick.OnPointerUp(null);
             _player.transform.rotation = Quaternion.Lerp(_player.transform.rotation, rotation, 2f);
+            
+            _animator.StartedWork();
+            await UniTask.Delay(4000);
+            _objTransform.DOMove(_player.transform.position,0.8f);
 
-            _animator.Work();
         }
 
         public void Update()
         {
-            
+            // todo мб тут добавить заработок какой? банана - ха рекламу пусть смотрит) 
         }
 
-        public void Exit()
+        public async void Exit()
         {
+            _animator.StayWork();
+            // todo обратное действие Enter
             _joystick.gameObject.SetActive(true);
         }
         
         private void OnPlayerWork(WorkSignal obj)
         {
-            _gameObject = obj.Component;
+            _triggerTransform = obj.TriggerTransform;
+            _objTransform = obj.ObjTransform;
         }
     }
 }
