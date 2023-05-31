@@ -42,7 +42,7 @@ namespace Player
             _signalBus.Subscribe<ThrowSignal>(OnThrow);
         }
         
-        private async void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out Work component))
             {
@@ -52,8 +52,9 @@ namespace Player
 
             if (other.TryGetComponent(out Banana banana))
             {
+                _signalBus.Fire<TakeSignal>();
+                _signalBus.Fire(new InfoInventorySignal(banana.NameInventory, banana.TextInfo));
                 _informationPanel.gameObject.SetActive(true);
-                
                 _inventory.Add(banana.gameObject);
                 banana.gameObject.SetActive(false);
             }
@@ -64,7 +65,7 @@ namespace Player
             _signalBus.Unsubscribe<ThrowSignal>(OnThrow);
         }
         
-        private async void OnThrow()
+        private void OnThrow()
         {
             _animator.StartThrow();
         }

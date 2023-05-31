@@ -7,6 +7,12 @@ public class SignalsInstaller : Installer<SignalsInstaller>
     {
         BildingButtonSignals();
         BildingPlayerSignals();
+        BildingTextSignals();
+    }
+
+    private void BildingTextSignals()
+    {
+        Container.DeclareSignal<InfoInventorySignal>();
     }
 
     private void BildingButtonSignals()

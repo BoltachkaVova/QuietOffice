@@ -97,6 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74bf67c63948439a9de12b60ad880ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nameInventory: Banana
+  textInfo: Minions crazy for him
 --- !u!135 &-4774133103377004835
 SphereCollider:
   m_ObjectHideFlags: 0
