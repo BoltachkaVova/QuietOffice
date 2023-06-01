@@ -20,10 +20,12 @@ public class SignalsInstaller : Installer<SignalsInstaller>
         Container.DeclareSignal<OpenCloseInventorySignal>();
         Container.DeclareSignal<ThrowSignal>();
         Container.DeclareSignal<TakeSignal>();
+        Container.DeclareSignal<StopWorkSignal>();
     }
 
     private void BildingPlayerSignals()
     {
         Container.DeclareSignal<WorkSignal>();
+        Container.DeclareSignal<AttackSignal>();
     }
 }

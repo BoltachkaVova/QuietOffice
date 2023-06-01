@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Inventory;
+using QuietOffice;
 using Signals;
 using Triggers;
 using UI;
@@ -14,14 +15,22 @@ namespace Player
 {
     public class Player : MonoBehaviour
     {
+        [SerializeField] private Banana banana;
+        [SerializeField] private Tom tom;
+        
         private ThrowPoint _throwPoint;
-
-        private List<GameObject> _inventory = new List<GameObject>(10);
         
         private PlayerAnimator _animator;
         private Joystick _joystick;
         private SignalBus _signalBus;
         private InformationPanel _informationPanel;
+
+        private Tom _target;
+
+        public Tom Tom1 => tom;
+        public ThrowPoint ThrowPoint => _throwPoint;
+        public Banana Banana => banana;
+
 
         [Inject]
         public void Construct(PlayerAnimator animator, Joystick joystick, SignalBus signalBus, InformationPanel informationPanel)
@@ -39,7 +48,7 @@ namespace Player
 
         private void Start()
         {
-            _signalBus.Subscribe<ThrowSignal>(OnThrow);
+           // 
         }
         
         private void OnTriggerEnter(Collider other)
@@ -55,19 +64,21 @@ namespace Player
                 _signalBus.Fire<TakeSignal>();
                 _signalBus.Fire(new InfoInventorySignal(banana.NameInventory, banana.TextInfo));
                 _informationPanel.gameObject.SetActive(true);
-                _inventory.Add(banana.gameObject);
                 banana.gameObject.SetActive(false);
             }
         }
 
+        private void Update()
+        {
+            
+        }
+
         private void OnDestroy()
         {
-            _signalBus.Unsubscribe<ThrowSignal>(OnThrow);
+            //
         }
         
-        private void OnThrow()
-        {
-            _animator.StartThrow();
-        }
+       
+        
     }
 }

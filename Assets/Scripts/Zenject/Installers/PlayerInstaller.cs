@@ -7,6 +7,7 @@ public class PlayerInstaller : Installer<PlayerInstaller>
     {
         Container.Bind<ActiveState>().AsSingle();
         Container.BindInterfacesAndSelfTo<WorkState>().AsSingle();
+        Container.BindInterfacesAndSelfTo<AttackState>().AsSingle();
         
         Container.BindInterfacesAndSelfTo<PlayerStateMachine>().AsSingle().NonLazy();
     }

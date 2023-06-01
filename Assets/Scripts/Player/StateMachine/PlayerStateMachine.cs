@@ -1,7 +1,6 @@
 ﻿using System;
 using Interfases;
 using Signals;
-using UnityEngine;
 using Zenject;
 
 namespace Player
@@ -13,12 +12,15 @@ namespace Player
         private IState _currentState;
         private readonly ActiveState _activeState;
         private readonly WorkState _workState;
+        private readonly AttackState _attackState;
         private readonly SignalBus _signalBus;
 
-        public PlayerStateMachine(ActiveState activeState, WorkState workState, SignalBus signalBus)
+        public PlayerStateMachine(ActiveState activeState, WorkState workState,
+            AttackState attackState, SignalBus signalBus)
         {
             _activeState = activeState;
             _workState = workState;
+            _attackState = attackState;
             _signalBus = signalBus;
         }
 
@@ -28,6 +30,9 @@ namespace Player
             _isTick = true;
             
             _signalBus.Subscribe<WorkSignal>(OnWorked);
+            _signalBus.Subscribe<StopWorkSignal>(OnStopWorked);
+            _signalBus.Subscribe<ThrowSignal>(OnThrow);
+            _signalBus.Subscribe<AttackSignal>(OnAttackState);
         }
         
         public void Tick()
@@ -39,6 +44,9 @@ namespace Player
         public void Dispose()
         {
             _signalBus.Unsubscribe<WorkSignal>(OnWorked);
+            _signalBus.Unsubscribe<StopWorkSignal>(OnStopWorked);
+            _signalBus.Unsubscribe<ThrowSignal>(OnThrow);
+            _signalBus.Unsubscribe<AttackSignal>(OnAttackState);
         }
 
         private void ChangeState(IState state)
@@ -52,5 +60,21 @@ namespace Player
         {
             ChangeState(_workState);
         }
+        
+        private void OnStopWorked()
+        {
+            ChangeState(_activeState);
+        }
+        
+        private void OnThrow()
+        {
+            ChangeState(_activeState);
+        }
+        
+        private void OnAttackState()
+        {
+            ChangeState(_attackState);
+        }
+
     }
 }
