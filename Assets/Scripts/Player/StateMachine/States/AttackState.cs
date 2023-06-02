@@ -32,9 +32,10 @@ namespace Player
         
         public void Initialize()
         {
-            _signalBus.Subscribe<ThrowSignal>(OnThrow);
             _banana = _player.Banana;
             _throwPoint = _player.ThrowPoint;
+            
+            _signalBus.Subscribe<ThrowSignal>(OnThrow);
         }
 
         public void Dispose()
@@ -54,7 +55,6 @@ namespace Player
             {
                 var direction = (_target.transform.position - _player.transform.position).normalized;
                 _player.transform.rotation = Quaternion.LookRotation(direction);
-                return;
             }
 
             if (!Input.GetMouseButtonDown(0)) return;
@@ -62,28 +62,29 @@ namespace Player
             RaycastHit hit;
 
             if (!Physics.Raycast(ray, out hit)) return;
-            _target = hit.transform.GetComponent<Tom>();
-                
-            if (_target != null)
-                Debug.Log("Попали в миньона!");
+            
+            var minion = hit.transform.GetComponent<Tom>();
+            if (minion != null)
+                _target = minion;
         }
 
-        public void Exit()
+        public async void Exit()
         {
             _joystick.gameObject.SetActive(true);
+            
+            await UniTask.Delay(2000);
+            _target = null;
         }
         
         private async void OnThrow()
         {
             if(_target == null) return;
-            
+
             _animator.StartThrow();
             await UniTask.Delay(800);
             var banan = Object.Instantiate(_banana, _throwPoint.transform.position, Quaternion.identity);
             await banan.transform.DOJump(_target.transform.position, 5f, 1, 1).SetEase(Ease.InOutSine)
                 .Join(banan.transform.DORotate(new Vector3(360,0,360),1.5f, RotateMode.FastBeyond360)).SetEase(Ease.Linear);
-            
-            _target = null;
         }
 
         

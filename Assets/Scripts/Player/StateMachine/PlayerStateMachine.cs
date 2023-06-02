@@ -31,8 +31,10 @@ namespace Player
             
             _signalBus.Subscribe<WorkSignal>(OnWorked);
             _signalBus.Subscribe<StopWorkSignal>(OnStopWorked);
+            
             _signalBus.Subscribe<ThrowSignal>(OnThrow);
             _signalBus.Subscribe<AttackSignal>(OnAttackState);
+            _signalBus.Subscribe<ExitAttackSignal>(OnExitAttackState);
         }
         
         public void Tick()
@@ -47,6 +49,7 @@ namespace Player
             _signalBus.Unsubscribe<StopWorkSignal>(OnStopWorked);
             _signalBus.Unsubscribe<ThrowSignal>(OnThrow);
             _signalBus.Unsubscribe<AttackSignal>(OnAttackState);
+            _signalBus.Unsubscribe<ExitAttackSignal>(OnExitAttackState);
         }
 
         private void ChangeState(IState state)
@@ -54,6 +57,11 @@ namespace Player
             _currentState?.Exit();
             _currentState = state;
             _currentState.Enter();
+        }
+        
+        private void OnExitAttackState()
+        {
+            ChangeState(_activeState);
         }
         
         private void OnWorked()

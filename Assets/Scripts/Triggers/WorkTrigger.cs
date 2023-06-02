@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Triggers
 {
-    public class Work : MonoBehaviour
+    public class WorkTrigger : TriggerBase
     {
         private Chair _chair;
         public Chair Chair => _chair;

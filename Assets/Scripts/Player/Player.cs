@@ -19,6 +19,7 @@ namespace Player
         [SerializeField] private Tom tom;
         
         private ThrowPoint _throwPoint;
+        private ProgressBar _progressBar;
         
         private PlayerAnimator _animator;
         private Joystick _joystick;
@@ -44,6 +45,7 @@ namespace Player
         private void Awake()
         {
             _throwPoint = GetComponentInChildren<ThrowPoint>();
+            _progressBar = GetComponentInChildren<ProgressBar>();
         }
 
         private void Start()
@@ -51,20 +53,41 @@ namespace Player
            // 
         }
         
-        private void OnTriggerEnter(Collider other)
+        private async void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out Work component))
-            {
-                //todo добавить задержку и прогресс бар
-                _signalBus.Fire(new WorkSignal(component.transform, component.Chair.transform));
-            }
 
-            if (other.TryGetComponent(out Banana banana))
+            if (other.TryGetComponent(out TriggerBase component))
             {
-                _signalBus.Fire<TakeSignal>();
-                _signalBus.Fire(new InfoInventorySignal(banana.NameInventory, banana.TextInfo));
+                _progressBar.Show(component.DurationProgress, component.ViewImage);
+                await UniTask.Delay(component.DurationProgress * 1000);
+                
+                if(!_progressBar.IsActive) return;
+                
+                switch (component)
+                {
+                    case WorkTrigger workTrigger:
+                        _signalBus.Fire(new WorkSignal(workTrigger.transform, workTrigger.Chair.transform));
+                        break;
+                    case BananaTrigger bananaTrigger:
+                        _signalBus.Fire<TakeSignal>();
+                        break;
+                    default:
+                        Debug.Log(component.name);
+                        break;
+                }
+                
+                _signalBus.Fire(new InfoInventorySignal(component.NameInventory, component.TextInfo));
                 _informationPanel.gameObject.SetActive(true);
-                banana.gameObject.SetActive(false);
+                component.gameObject.SetActive(false);
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.GetComponent<TriggerBase>())
+            {
+                _progressBar.Close();
+                Debug.Log(other.name);
             }
         }
 

@@ -224,6 +224,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e07b30389e6b43dcbc7bf47014ae7e76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  viewImage: {fileID: 21300000, guid: b77e5138258dadf4f927b964de056508, type: 3}
+  nameInventory: Work
+  textInfo: "\u0420\u0430\u0431\u043E\u0442\u0430 \u0434\u043B\u044F \u0441\u043B\u0430\u0431\u0430\u043A\u043E\u0432! "
+  durationProgress: 2
 --- !u!1 &4063987184566434846
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,7 +239,7 @@ GameObject:
   - component: {fileID: 482316191364954071}
   - component: {fileID: 8895393814240567453}
   m_Layer: 0
-  m_Name: Chair
+  m_Name: ChairWorkTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
