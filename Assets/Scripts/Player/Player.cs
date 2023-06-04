@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using DG.Tweening;
+﻿using Cysharp.Threading.Tasks;
 using Inventory;
-using QuietOffice;
+using Minions;
 using Signals;
 using Triggers;
 using UI;
@@ -15,8 +12,9 @@ namespace Player
 {
     public class Player : MonoBehaviour
     {
-        [SerializeField] private Banana banana;
-        [SerializeField] private Tom tom;
+        [SerializeField] private InventoryBase banana;
+        [SerializeField] private InventoryBase regularPlane;
+        
         
         private ThrowPoint _throwPoint;
         private ProgressBar _progressBar;
@@ -28,9 +26,11 @@ namespace Player
 
         private Tom _target;
 
-        public Tom Tom1 => tom;
+        public Tom Tom => _target;
         public ThrowPoint ThrowPoint => _throwPoint;
-        public Banana Banana => banana;
+        
+        public InventoryBase Banana => banana;
+        public InventoryBase RegularPlane => regularPlane;
 
 
         [Inject]
@@ -50,7 +50,7 @@ namespace Player
 
         private void Start()
         {
-           // 
+           
         }
         
         private async void OnTriggerEnter(Collider other)
@@ -72,12 +72,12 @@ namespace Player
                         _signalBus.Fire<TakeSignal>();
                         break;
                     default:
-                        Debug.Log(component.name);
+                        Debug.Log($"Fail in Player {component.name}");
                         break;
                 }
                 
                 _signalBus.Fire(new InfoInventorySignal(component.NameInventory, component.TextInfo));
-                _informationPanel.gameObject.SetActive(true);
+                _informationPanel.gameObject.SetActive(true); // todo  поправить 
                 component.gameObject.SetActive(false);
             }
         }
@@ -93,15 +93,41 @@ namespace Player
 
         private void Update()
         {
+            if (Input.GetMouseButtonDown(1))
+            {
+                _signalBus.Fire(new TargetSelectedSignal(regularPlane));
+                ResetTarget().Forget();// todo временно... нужно сделать проверку, если _target находиться в зоне видимости камеры то можно что-то делать
+            }
+
+            if (!Input.GetMouseButtonDown(0)) return;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
+            RaycastHit hit;
+
+            if (!Physics.Raycast(ray, out hit)) return;
+            
+            var minion = hit.transform.GetComponent<Tom>();
+
+            if (minion != null)
+            {
+                _target = minion;
+                _target.ThisTarget(true);
+                
+                _signalBus.Fire(new TargetSelectedSignal(banana, _target));
+                ResetTarget().Forget();// todo временно... нужно сделать проверку, если _target находиться в зоне видимости камеры то можно что-то делать
+            }
+        }
+        
+        private async UniTaskVoid ResetTarget() 
+        {
+            await UniTask.Delay(10000);
+            _signalBus.Fire<TargetLostSignal>();
+            
+            if(_target == null) return;
+            
+            _target.ThisTarget(false);
+            _target = null;
             
         }
 
-        private void OnDestroy()
-        {
-            //
-        }
-        
-       
-        
     }
 }

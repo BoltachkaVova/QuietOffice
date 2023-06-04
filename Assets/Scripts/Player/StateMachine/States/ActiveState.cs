@@ -1,11 +1,11 @@
 ﻿using Interfases;
+using Minions;
 using UnityEngine;
 
 namespace Player
 {
     public class ActiveState : IState
     {
-        
         private float _speed = 2f;
         private float _speedRotate = 7f;
         

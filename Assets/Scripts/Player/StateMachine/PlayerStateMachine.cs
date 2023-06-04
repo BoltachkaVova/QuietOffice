@@ -26,17 +26,17 @@ namespace Player
 
         public void Initialize()
         {
-            ChangeState(_activeState);
+            ChangeState(_activeState); // todo временно!!!
             _isTick = true;
             
             _signalBus.Subscribe<WorkSignal>(OnWorked);
             _signalBus.Subscribe<StopWorkSignal>(OnStopWorked);
             
             _signalBus.Subscribe<ThrowSignal>(OnThrow);
-            _signalBus.Subscribe<AttackSignal>(OnAttackState);
-            _signalBus.Subscribe<ExitAttackSignal>(OnExitAttackState);
+            _signalBus.Subscribe<TargetLostSignal>(OnTargetLost);
         }
         
+
         public void Tick()
         {
             if(!_isTick) return;
@@ -47,21 +47,16 @@ namespace Player
         {
             _signalBus.Unsubscribe<WorkSignal>(OnWorked);
             _signalBus.Unsubscribe<StopWorkSignal>(OnStopWorked);
+            
             _signalBus.Unsubscribe<ThrowSignal>(OnThrow);
-            _signalBus.Unsubscribe<AttackSignal>(OnAttackState);
-            _signalBus.Unsubscribe<ExitAttackSignal>(OnExitAttackState);
+            _signalBus.Unsubscribe<TargetLostSignal>(OnTargetLost);
         }
-
+        
         private void ChangeState(IState state)
         {
             _currentState?.Exit();
             _currentState = state;
             _currentState.Enter();
-        }
-        
-        private void OnExitAttackState()
-        {
-            ChangeState(_activeState);
         }
         
         private void OnWorked()
@@ -76,13 +71,12 @@ namespace Player
         
         private void OnThrow()
         {
-            ChangeState(_activeState);
+            ChangeState(_attackState);   
         }
         
-        private void OnAttackState()
+        private void OnTargetLost()
         {
-            ChangeState(_attackState);
+            ChangeState(_activeState);
         }
-
     }
 }

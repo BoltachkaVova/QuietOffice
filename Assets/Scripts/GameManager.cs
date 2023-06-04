@@ -8,12 +8,12 @@ namespace QuietOffice
     {
         public void Initialize()
         {
-            Debug.Log("Init GameManager");
+           
         }
 
         public void Dispose()
         {
-            Debug.Log("Dis GameManager");
+            
         }
     }
 }

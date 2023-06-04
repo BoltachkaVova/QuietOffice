@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-
-namespace QuietOffice
+﻿namespace Minions
 {
-    public class Tom : MonoBehaviour
+    public class Tom : MinionBase
     {
-        
+       
     }
 }
