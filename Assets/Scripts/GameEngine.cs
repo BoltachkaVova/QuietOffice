@@ -4,11 +4,11 @@ using Zenject;
 
 namespace QuietOffice
 {
-    public class GameManager : IInitializable, IDisposable
+    public class GameEngine : IInitializable, IDisposable
     {
         public void Initialize()
         {
-           
+            Debug.Log("GameEngine");
         }
 
         public void Dispose()

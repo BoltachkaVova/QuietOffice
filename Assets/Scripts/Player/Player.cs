@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Inventory;
-using Minions;
+using Employees;
 using Signals;
 using Triggers;
 using UI;

@@ -1,5 +1,4 @@
 ﻿using Interfases;
-using Minions;
 using UnityEngine;
 
 namespace Player

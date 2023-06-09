@@ -12,7 +12,6 @@ namespace Player
         
         private readonly Animator _animator;
         
-
         public PlayerAnimator(Animator animator)
         {
             _animator = animator;
@@ -33,7 +32,7 @@ namespace Player
             _animator.SetTrigger(StopWork);
         }
 
-        public void ThrowAtMinion()
+        public void ThrowAtEmployees()
         {
             _animator.SetTrigger(ThrowAt);
         }

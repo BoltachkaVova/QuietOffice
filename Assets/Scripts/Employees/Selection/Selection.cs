@@ -1,8 +1,7 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
-namespace Minions
+
+namespace Employees
 {
     public class Selection : MonoBehaviour
     {

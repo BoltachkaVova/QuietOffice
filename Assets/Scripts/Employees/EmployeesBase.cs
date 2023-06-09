@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Minions
+namespace Employees
 {
-    public class MinionBase : MonoBehaviour
+    public abstract class EmployeesBase : MonoBehaviour
     {
         private Selection _selection;
 

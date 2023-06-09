@@ -12,15 +12,15 @@ namespace Player
         private IState _currentState;
         private readonly ActiveState _activeState;
         private readonly WorkState _workState;
-        private readonly AttackState _attackState;
+        private readonly ThrowState throwState;
         private readonly SignalBus _signalBus;
 
         public PlayerStateMachine(ActiveState activeState, WorkState workState,
-            AttackState attackState, SignalBus signalBus)
+            ThrowState throwState, SignalBus signalBus)
         {
             _activeState = activeState;
             _workState = workState;
-            _attackState = attackState;
+            this.throwState = throwState;
             _signalBus = signalBus;
         }
 
@@ -71,7 +71,7 @@ namespace Player
         
         private void OnThrow()
         {
-            ChangeState(_attackState);   
+            ChangeState(throwState);   
         }
         
         private void OnTargetLost()

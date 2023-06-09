@@ -1,20 +1,20 @@
 ﻿using Inventory;
-using Minions;
+using Employees;
 
 namespace Signals
 {
     public struct TargetSelectedSignal
     {
         private InventoryBase _inventoryBase;
-        private MinionBase _minionBase;
+        private EmployeesBase employeesBase;
         
         public InventoryBase InventoryBase => _inventoryBase;
-        public MinionBase MinionBase => _minionBase;
+        public EmployeesBase EmployeesBase => employeesBase;
 
-        public TargetSelectedSignal(InventoryBase inventoryBase, MinionBase minionBase = null)
+        public TargetSelectedSignal(InventoryBase inventoryBase, EmployeesBase employeesBase = null)
         {
             _inventoryBase = inventoryBase;
-            _minionBase = minionBase;
+            this.employeesBase = employeesBase;
         }
     }
 }
