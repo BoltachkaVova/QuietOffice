@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace OfficeObject
+namespace WorkObjects
 {
     public class OfficeFiles : MonoBehaviour
     {

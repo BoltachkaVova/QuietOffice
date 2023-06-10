@@ -46,8 +46,7 @@ namespace Player
             _throwPoint = GetComponentInChildren<ThrowPoint>();
             _progressBar = GetComponentInChildren<ProgressBar>();
         }
-
-  
+        
         
         private async void OnTriggerEnter(Collider other)
         {

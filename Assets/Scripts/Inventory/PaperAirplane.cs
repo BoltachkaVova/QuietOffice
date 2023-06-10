@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Inventory
 {
-    public class Plane : InventoryBase
+    public class PaperAirplane : InventoryBase
     {
         [SerializeField] private float speed;
 
@@ -14,9 +14,10 @@ namespace Inventory
             _isActive = true;
         }
 
-        private void OnCollisionStay(Collision other)
+        private void OnCollisionEnter(Collision other)
         {
             _isActive = false;
+            Debug.Log("Collision");
         }
 
         private void Update()

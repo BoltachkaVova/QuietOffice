@@ -8,7 +8,6 @@ using Signals;
 using UnityEngine;
 using Zenject;
 using Object = UnityEngine.Object;
-using Plane = Inventory.Plane;
 
 namespace Player
 {
@@ -58,7 +57,7 @@ namespace Player
                     _isLookAt = true;
                     break;
                 
-                case Plane:
+                case PaperAirplane:
                     await ThrowObject();
                     break;
                 

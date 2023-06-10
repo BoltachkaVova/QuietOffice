@@ -41,12 +41,8 @@ namespace Player
         {
             _joystick.gameObject.SetActive(false);
             _joystick.OnPointerUp(null);
-            
-            var rotation = _triggerTransform.localRotation;
-            var position = _triggerTransform.position;
 
-            await _player.transform.DOMove(new Vector3(position.x, 0, position.z), 0.5f);
-            _player.transform.rotation = Quaternion.Lerp(_player.transform.rotation, rotation, 2f);
+            await MoveToWorkPoint();
             
             _animator.StartedWork();
             
@@ -77,6 +73,18 @@ namespace Player
             _objTransform = obj.ObjTransform;
             
             _startObjPosition = obj.ObjTransform.position;
+        }
+
+        private async UniTask MoveToWorkPoint()
+        {
+            var rotation = _triggerTransform.localRotation;
+            var position = _triggerTransform.position;
+            
+            _animator.Move(0.5f);
+            await _player.transform.DOMove(new Vector3(position.x, 0, position.z), 0.5f);
+            _animator.Move(0f);
+            
+            _player.transform.rotation = Quaternion.Lerp(_player.transform.rotation, rotation, 2f);
         }
     }
 }
