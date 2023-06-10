@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using Inventory;
 using Employees;
 using Signals;
@@ -15,18 +16,17 @@ namespace Player
         [SerializeField] private InventoryBase banana;
         [SerializeField] private InventoryBase regularPlane;
         
-        
         private ThrowPoint _throwPoint;
         private ProgressBar _progressBar;
         
         private PlayerAnimator _animator;
         private Joystick _joystick;
         private SignalBus _signalBus;
-        private InformationPanel _informationPanel;
+      
 
-        private Tom _target;
+        private EmployeesBase _target;
 
-        public Tom Tom => _target;
+        public EmployeesBase Tom => _target;
         public ThrowPoint ThrowPoint => _throwPoint;
         
         public InventoryBase Banana => banana;
@@ -34,12 +34,11 @@ namespace Player
 
 
         [Inject]
-        public void Construct(PlayerAnimator animator, Joystick joystick, SignalBus signalBus, InformationPanel informationPanel)
+        public void Construct(PlayerAnimator animator, Joystick joystick, SignalBus signalBus)
         {
             _animator = animator;
             _joystick = joystick;
             _signalBus = signalBus;
-            _informationPanel = informationPanel;
         }
 
         private void Awake()
@@ -48,50 +47,43 @@ namespace Player
             _progressBar = GetComponentInChildren<ProgressBar>();
         }
 
-        private void Start()
-        {
-           
-        }
+  
         
         private async void OnTriggerEnter(Collider other)
         {
-
             if (other.TryGetComponent(out TriggerBase component))
             {
                 _progressBar.Show(component.DurationProgress, component.ViewImage);
-                await UniTask.Delay(component.DurationProgress * 1000);
+                await UniTask.WaitUntil(() => !_progressBar.IsActive);
                 
-                if(!_progressBar.IsActive) return;
+                if(!_progressBar.IsDone) return;
                 
                 switch (component)
                 {
                     case WorkTrigger workTrigger:
                         _signalBus.Fire(new WorkSignal(workTrigger.transform, workTrigger.Chair.transform));
                         break;
+                    
                     case BananaTrigger bananaTrigger:
-                        _signalBus.Fire<TakeSignal>();
+                        bananaTrigger.gameObject.SetActive(false); 
                         break;
+                    
                     default:
                         Debug.Log($"Fail in Player {component.name}");
                         break;
                 }
                 
                 _signalBus.Fire(new InfoInventorySignal(component.NameInventory, component.TextInfo));
-                _informationPanel.gameObject.SetActive(true); // todo  поправить 
-                component.gameObject.SetActive(false);
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
             if (other.GetComponent<TriggerBase>())
-            {
-                _progressBar.Close();
-                Debug.Log(other.name);
-            }
+                _progressBar.Close(false);
         }
 
-        private void Update()
+        private void Update() 
         {
             if (Input.GetMouseButtonDown(1))
             {
@@ -104,18 +96,17 @@ namespace Player
             RaycastHit hit;
 
             if (!Physics.Raycast(ray, out hit)) return;
-            
-            var minion = hit.transform.GetComponent<Tom>();
-
-            if (minion != null)
+            var employess = hit.transform.GetComponent<EmployeesBase>();
+            if (employess != null)
             {
-                _target = minion;
+                _target = employess;
                 _target.ThisTarget(true);
                 
                 _signalBus.Fire(new TargetSelectedSignal(banana, _target));
                 ResetTarget().Forget();// todo временно... нужно сделать проверку, если _target находиться в зоне видимости камеры то можно что-то делать
             }
         }
+        
         
         private async UniTaskVoid ResetTarget() 
         {
@@ -126,7 +117,6 @@ namespace Player
             
             _target.ThisTarget(false);
             _target = null;
-            
         }
 
     }

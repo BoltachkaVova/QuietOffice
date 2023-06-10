@@ -8,14 +8,11 @@ namespace UI
 {
     public class GamePanel : MonoBehaviour
     {
-        private TakeButton _takeButton;
         private ThrowButton _throwButton;
         private StopWorkButton _stopWorkButton;
-        private AttackButton _attackButton;
-        private ExitAttackButton _exitAttackButton;
 
         private SignalBus _signal;
-        private InformationPanel _informationPanel;
+        private InformationPanel _informationPanel; // todo entity 
 
         [Inject]
         public void Construct(SignalBus signalBus)
@@ -26,10 +23,7 @@ namespace UI
         private void Awake()
         {
             _throwButton = GetComponentInChildren<ThrowButton>(true);
-            _takeButton = GetComponentInChildren<TakeButton>(true);
             _stopWorkButton = GetComponentInChildren<StopWorkButton>(true);
-            _attackButton = GetComponentInChildren<AttackButton>(true);
-            _exitAttackButton = GetComponentInChildren<ExitAttackButton>(true);
         }
 
         private void Start()

@@ -2,7 +2,7 @@
 
 namespace UI
 {
-    public class UIManager : MonoBehaviour
+    public class UIController : MonoBehaviour
     {
         
     }

@@ -13,6 +13,6 @@ public class UIMonoInstaller : MonoInstaller
         Container.Bind<GamePanel>().FromInstance(GetComponentInChildren<GamePanel>(true)).AsSingle();
         Container.Bind<InformationPanel>().FromInstance(GetComponentInChildren<InformationPanel>(true)).AsSingle();
         
-        Container.Bind<UIManager>().FromInstance(GetComponent<UIManager>()).AsSingle();
+        Container.Bind<UIController>().FromInstance(GetComponent<UIController>()).AsSingle();
     }
 }

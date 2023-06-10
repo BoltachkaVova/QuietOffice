@@ -59,7 +59,7 @@ namespace Player
                     break;
                 
                 case Plane:
-                    await ThrowObj();
+                    await ThrowObject();
                     break;
                 
                 default:
@@ -71,7 +71,16 @@ namespace Player
         public void Update()
         {
             if (!_isLookAt)  return;
+            LookAt();
+        }
 
+        public void Exit()
+        {
+            _joystick.gameObject.SetActive(true);
+        }
+
+        private void LookAt()
+        {
             var transform = _player.transform;
             var direction = (_target.transform.position - transform.position).normalized;
             
@@ -80,11 +89,6 @@ namespace Player
                 _speedRotate * Time.deltaTime);
         }
 
-        public void Exit()
-        {
-            _joystick.gameObject.SetActive(true);
-        }
-        
         private async UniTaskVoid ThrowAtEmployees()
         {
             _animator.ThrowAtEmployees();
@@ -98,7 +102,7 @@ namespace Player
             _isLookAt = false;
         }
 
-        private async UniTask ThrowObj()
+        private async UniTask ThrowObject()
         {
             _animator.ThrowObj();
             await UniTask.Delay(900);

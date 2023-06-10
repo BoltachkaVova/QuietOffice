@@ -1,26 +1,28 @@
-﻿using Cinemachine;
-using UnityEngine;
+﻿using System;
+using Cinemachine;
 using Zenject;
 
 namespace QuietOffice.Camera
 {
-    public class CameraTracking : MonoBehaviour
+    public class TrackingCamera : IInitializable, IDisposable
     {
-        private CinemachineVirtualCamera _camera;
-        private Player.Player _player;
+        private readonly CinemachineVirtualCamera _camera;
+        private readonly Player.Player _player;
         
-        
-        [Inject]
-        public void Construct(Player.Player player, CinemachineVirtualCamera camera)
+        public TrackingCamera (Player.Player player, CinemachineVirtualCamera camera)
         {
             _player = player;
             _camera = camera;
         }
         
-
-        private void Start()
+        public void Initialize()
         {
             SetOnPlayer();
+        }
+
+        public void Dispose()
+        {
+            
         }
 
         private void SetOnPlayer()
@@ -29,5 +31,7 @@ namespace QuietOffice.Camera
             _camera.m_Follow = playerTransform;
             _camera.m_LookAt = playerTransform;
         }
+
+       
     }
 }

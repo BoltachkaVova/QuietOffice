@@ -34,22 +34,13 @@ namespace UI
         private void Start()
         {
             _signalBus.Subscribe<InfoInventorySignal>(OnShowInfoPanel);
-            _signalBus.Subscribe<AttackSignal>(OnShowPanel);
         }
         
         private void OnDestroy()
         {
             _signalBus.Unsubscribe<InfoInventorySignal>(OnShowInfoPanel);
-            _signalBus.Unsubscribe<AttackSignal>(OnShowPanel);
         }
-
-        private async void OnShowPanel()
-        {
-            _infoText.text = "Specify which minion we will attack";
-            _nameText.text = "Attack minions";
-            await _canvasGroup.DOFade(1, 3f); // todo мЭджик 3f
-            await _canvasGroup.DOFade(0, 5f);
-        }
+        
 
         private async void OnShowInfoPanel(InfoInventorySignal obj)
         {
