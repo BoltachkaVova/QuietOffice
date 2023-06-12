@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 5637422197876330703}
   - component: {fileID: 5637422197876330702}
   m_Layer: 0
-  m_Name: ZoneOpenClosedDoor
+  m_Name: TriggerOpenClosedDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,8 +129,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69111009616944a9be9a0bf92abc2530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 1.5
-  euler: 140
+  rotationDuration: 1
+  openAngle: 110
 --- !u!65 &5637422197876330702
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -142,8 +142,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.2789106, y: 0.21513546, z: 1}
-  m_Center: {x: -0.00252676, y: 0.03918436, z: 0}
+  m_Size: {x: 1.2789106, y: 0.1437656, z: 1.4590082}
+  m_Center: {x: -0.0025267343, y: 0.0034994334, z: -0.106336065}
 --- !u!1 &6479992548784356043
 GameObject:
   m_ObjectHideFlags: 0

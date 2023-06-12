@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 
-namespace Triggers
+namespace Room
 {
     public class TriggerBase : MonoBehaviour
     {
+        [Header("View Settings")]
         [SerializeField] protected Sprite viewImage;
         [SerializeField] protected string nameInventory = "Inventory";
         [SerializeField] protected string textInfo= "Info";

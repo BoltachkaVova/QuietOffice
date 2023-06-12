@@ -14,6 +14,7 @@ namespace Player
         private Transform _objTransform;
         private Vector3 _startObjPosition;
         
+        
         private readonly PlayerAnimator _animator;
         private readonly Player _player;
         private readonly SignalBus _signalBus;
@@ -46,8 +47,8 @@ namespace Player
             
             _animator.StartedWork();
             
-            await UniTask.Delay(4000);
-            _objTransform.DOMove(_player.transform.position,0.8f);
+            await UniTask.Delay(4100); // todo Мэджик
+            _objTransform.DOMove(_player.transform.position,0.8f); // todo Мэджик
         }
 
         public void Update()
@@ -55,18 +56,17 @@ namespace Player
             
         }
 
-        public async void Exit()
+        public void Exit()
         {
-            Sequence sequence = DOTween.Sequence(); 
-            sequence.Append(_objTransform.DOMove(_startObjPosition, 0.8f))
-                .Join(_player.transform.DOMove(_startObjPosition, 0.8f)).Play().SetLoops(0);
-            
             _animator.StayWork();
-            await UniTask.Delay(990);
             
-            _joystick.gameObject.SetActive(true);
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(_objTransform.DOMove(_startObjPosition, 0.8f)) // todo Мэджик
+                .Join(_player.transform.DOMove(_startObjPosition, 0.8f)).Play().SetLoops(0) // todo Мэджик
+                .OnComplete(()=> _joystick.gameObject.SetActive(true));
         }
         
+
         private void OnPlayerWork(WorkSignal obj)
         {
             _triggerTransform = obj.TriggerTransform;
@@ -81,10 +81,10 @@ namespace Player
             var position = _triggerTransform.position;
             
             _animator.Move(0.5f);
-            await _player.transform.DOMove(new Vector3(position.x, 0, position.z), 0.5f);
-            _animator.Move(0f);
+            await _player.transform.DOMove(new Vector3(position.x, 0, position.z), 1f)  // todo Мэджик
+                .OnComplete(() => _animator.Move(0f));
             
-            _player.transform.rotation = Quaternion.Lerp(_player.transform.rotation, rotation, 2f);
+            _player.transform.rotation = Quaternion.Lerp(_player.transform.rotation, rotation, 2f); // todo Мэджик
         }
     }
 }

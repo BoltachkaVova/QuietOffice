@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Interfases;
+using UnityEngine;
 
 namespace Employees
 {
-    public abstract class EmployeesBase : MonoBehaviour
+    public abstract class EmployeesBase : MonoBehaviour, ISelection
     {
         private Selection _selection;
 
@@ -11,7 +12,7 @@ namespace Employees
             _selection = GetComponentInChildren<Selection>();
         }
 
-        public void ThisTarget(bool isOn)
+        public void ThisSelection(bool isOn)
         {
             _selection.IsOn(isOn);
         }

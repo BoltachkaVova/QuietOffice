@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Room
+﻿namespace Room
 {
     public class WorkRoom : BaseRoom
     {

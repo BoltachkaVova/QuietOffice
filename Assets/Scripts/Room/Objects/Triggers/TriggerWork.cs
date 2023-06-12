@@ -1,10 +1,8 @@
-﻿using System;
-using Room;
-using UnityEngine;
+﻿
 
-namespace Triggers
+namespace Room
 {
-    public class WorkTrigger : TriggerBase
+    public class TriggerWork : TriggerBase
     {
         private Chair _chair;
         public Chair Chair => _chair;

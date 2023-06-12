@@ -1,10 +1,8 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
-using Inventory;
-using Employees;
 using Signals;
-using Triggers;
-using UI;
+using Room;
 using UnityEngine;
 using Zenject;
 
@@ -13,8 +11,7 @@ namespace Player
 {
     public class Player : MonoBehaviour
     {
-        [SerializeField] private InventoryBase banana;
-        [SerializeField] private InventoryBase regularPlane;
+        [SerializeField] private Transform point;
         
         private ThrowPoint _throwPoint;
         private ProgressBar _progressBar;
@@ -22,16 +19,11 @@ namespace Player
         private PlayerAnimator _animator;
         private Joystick _joystick;
         private SignalBus _signalBus;
-      
-
-        private EmployeesBase _target;
-
-        public EmployeesBase Tom => _target;
+        
         public ThrowPoint ThrowPoint => _throwPoint;
         
-        public InventoryBase Banana => banana;
-        public InventoryBase RegularPlane => regularPlane;
-
+        private List<OfficeFiles> _officeFileses = new List<OfficeFiles>(20);
+        
 
         [Inject]
         public void Construct(PlayerAnimator animator, Joystick joystick, SignalBus signalBus)
@@ -59,63 +51,48 @@ namespace Player
                 
                 switch (component)
                 {
-                    case WorkTrigger workTrigger:
+                    case TriggerWork workTrigger:
                         _signalBus.Fire(new WorkSignal(workTrigger.transform, workTrigger.Chair.transform));
                         break;
                     
-                    case BananaTrigger bananaTrigger:
+                    case TriggerBanana bananaTrigger:
                         bananaTrigger.gameObject.SetActive(false); 
                         break;
                     
                     default:
                         Debug.Log($"Fail in Player {component.name}");
-                        break;
+                        return;
                 }
-                
                 _signalBus.Fire(new InfoInventorySignal(component.NameInventory, component.TextInfo));
+            }
+
+            if (other.TryGetComponent(out Printer printer))
+            {
+                if(! printer.IsDone) return;
+                printer.PickUp(point); // todo мб добвать состояние ожидания? (тип жди пока не закончится какое-то действие)
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
             if (other.GetComponent<TriggerBase>())
+            {
                 _progressBar.Close(false);
-        }
-
-        private void Update() 
-        {
-            if (Input.GetMouseButtonDown(1))
-            {
-                _signalBus.Fire(new TargetSelectedSignal(regularPlane));
-                ResetTarget().Forget();// todo временно... нужно сделать проверку, если _target находиться в зоне видимости камеры то можно что-то делать
             }
 
-            if (!Input.GetMouseButtonDown(0)) return;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
-            RaycastHit hit;
-
-            if (!Physics.Raycast(ray, out hit)) return;
-            var employess = hit.transform.GetComponent<EmployeesBase>();
-            if (employess != null)
+            if (other.GetComponent<Printer>())
             {
-                _target = employess;
-                _target.ThisTarget(true);
-                
-                _signalBus.Fire(new TargetSelectedSignal(banana, _target));
-                ResetTarget().Forget();// todo временно... нужно сделать проверку, если _target находиться в зоне видимости камеры то можно что-то делать
+                _officeFileses = GetComponentsInChildren<OfficeFiles>().ToList();
+                if (_officeFileses.Count > 1) // todo временно 
+                {
+                    // разбросать 
+                }
             }
         }
-        
-        
-        private async UniTaskVoid ResetTarget() 
+
+        private void CheckTrigger()
         {
-            await UniTask.Delay(10000);
-            _signalBus.Fire<TargetLostSignal>();
             
-            if(_target == null) return;
-            
-            _target.ThisTarget(false);
-            _target = null;
         }
 
     }

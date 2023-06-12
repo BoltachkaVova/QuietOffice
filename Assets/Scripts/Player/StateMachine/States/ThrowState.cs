@@ -91,11 +91,12 @@ namespace Player
         private async UniTaskVoid ThrowAtEmployees()
         {
             _animator.ThrowAtEmployees();
-            await UniTask.Delay(2000);
+            await UniTask.Delay(2000);// todo Мэджик
             var banan = Object.Instantiate(_inventory, _throwPoint.transform.position, Quaternion.identity);
             
             await banan.transform.DOJump(_target.transform.position, 4f, 1, 1).SetEase(Ease.InOutSine)
-                .Join(banan.transform.DORotate(new Vector3(360,0,360),1.5f, RotateMode.FastBeyond360)).SetEase(Ease.Linear);
+                .Join(banan.transform.DORotate(new Vector3(360,0,360),1.5f, RotateMode.FastBeyond360)).SetEase(Ease.Linear); 
+            // todo Мэджик
             
             _signalBus.Fire<TargetLostSignal>();
             _isLookAt = false;
@@ -104,7 +105,7 @@ namespace Player
         private async UniTask ThrowObject()
         {
             _animator.ThrowObj();
-            await UniTask.Delay(900);
+            await UniTask.Delay(900);// todo Мэджик
             
             var transform = _throwPoint.transform;
             Object.Instantiate(_inventory, transform.position, transform.rotation);
