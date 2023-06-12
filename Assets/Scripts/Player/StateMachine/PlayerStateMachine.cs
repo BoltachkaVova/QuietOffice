@@ -12,16 +12,18 @@ namespace Player
         private IState _currentState;
         private readonly ActiveState _activeState;
         private readonly WorkState _workState;
-        private readonly ThrowState throwState;
+        private readonly ThrowState _throwState;
         private readonly SignalBus _signalBus;
+        private readonly IdleState _idleState;
 
         public PlayerStateMachine(ActiveState activeState, WorkState workState,
-            ThrowState throwState, SignalBus signalBus)
+            ThrowState throwState, SignalBus signalBus, IdleState idleState)
         {
             _activeState = activeState;
             _workState = workState;
-            this.throwState = throwState;
+            _throwState = throwState;
             _signalBus = signalBus;
+            _idleState = idleState;
         }
 
         public void Initialize()
@@ -29,14 +31,16 @@ namespace Player
             ChangeState(_activeState); // todo временно!!!
             _isTick = true;
             
-            _signalBus.Subscribe<WorkSignal>(OnWorked);
-            _signalBus.Subscribe<StopWorkSignal>(OnStopWorked);
+            _signalBus.Subscribe<WorkStateSignal>(OnWorked);
+            _signalBus.Subscribe<ActiveStateSignal>(OnActive);
             
             _signalBus.Subscribe<ThrowSignal>(OnThrow);
             _signalBus.Subscribe<TargetLostSignal>(OnTargetLost);
+            
+            _signalBus.Subscribe<IdleStateSignal>(OnIdle);
+            
         }
         
-
         public void Tick()
         {
             if(!_isTick) return;
@@ -45,11 +49,13 @@ namespace Player
 
         public void Dispose()
         {
-            _signalBus.Unsubscribe<WorkSignal>(OnWorked);
-            _signalBus.Unsubscribe<StopWorkSignal>(OnStopWorked);
+            _signalBus.Unsubscribe<WorkStateSignal>(OnWorked);
+            _signalBus.Unsubscribe<ActiveStateSignal>(OnActive);
             
             _signalBus.Unsubscribe<ThrowSignal>(OnThrow);
             _signalBus.Unsubscribe<TargetLostSignal>(OnTargetLost);
+            
+            _signalBus.Unsubscribe<IdleStateSignal>(OnIdle);
         }
         
         private void ChangeState(IState state)
@@ -64,19 +70,26 @@ namespace Player
             ChangeState(_workState);
         }
         
-        private void OnStopWorked()
+        private void OnActive()
         {
             ChangeState(_activeState);
         }
         
         private void OnThrow()
         {
-            ChangeState(throwState);   
+            ChangeState(_throwState);   
         }
         
         private void OnTargetLost()
         {
             ChangeState(_activeState);
         }
+        
+        private void OnIdle()
+        {
+            ChangeState(_idleState);
+        }
+
     }
+    
 }

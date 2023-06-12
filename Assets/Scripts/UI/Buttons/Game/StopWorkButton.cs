@@ -2,7 +2,7 @@
 
 namespace UI
 {
-    public class StopWorkButton : BaseButton<StopWorkSignal>
+    public class StopWorkButton : BaseButton<ActiveStateSignal>
     {
         
     }

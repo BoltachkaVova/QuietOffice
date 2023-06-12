@@ -2,7 +2,7 @@
 
 namespace Signals
 {
-    public struct WorkSignal
+    public struct WorkStateSignal
     {
         private readonly Transform _trigger;
         private readonly Transform _objTransform;
@@ -10,7 +10,7 @@ namespace Signals
         public Transform TriggerTransform => _trigger;
         public Transform ObjTransform => _objTransform;
         
-        public WorkSignal(Transform trigger, Transform objTransform = null)
+        public WorkStateSignal(Transform trigger, Transform objTransform = null)
         {
             _trigger = trigger;
             _objTransform = objTransform;

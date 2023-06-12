@@ -30,12 +30,12 @@ namespace Player
         
         public void Initialize()
         {
-            _signalBus.Subscribe<WorkSignal>(OnPlayerWork);
+            _signalBus.Subscribe<WorkStateSignal>(OnPlayerWork);
         }
         
         public void Dispose()
         {
-            _signalBus.Unsubscribe<WorkSignal>(OnPlayerWork);
+            _signalBus.Unsubscribe<WorkStateSignal>(OnPlayerWork);
         }
         
         public async void Enter()
@@ -67,7 +67,7 @@ namespace Player
         }
         
 
-        private void OnPlayerWork(WorkSignal obj)
+        private void OnPlayerWork(WorkStateSignal obj)
         {
             _triggerTransform = obj.TriggerTransform;
             _objTransform = obj.ObjTransform;

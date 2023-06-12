@@ -1,6 +1,6 @@
 ﻿namespace Signals
 {
-    public struct StopWorkSignal
+    public struct ActiveStateSignal
     {
         
     }

@@ -28,8 +28,8 @@ namespace UI
 
         private void Start()
         {
-            _signal.Subscribe<WorkSignal>(OnShowStopWorkButton);
-            _signal.Subscribe<StopWorkSignal>(OnStopWork);
+            _signal.Subscribe<WorkStateSignal>(OnShowStopWorkButton);
+            _signal.Subscribe<ActiveStateSignal>(OnStopWork);
             
             _signal.Subscribe<TargetSelectedSignal>(OnTargetSelected);
             _signal.Subscribe<TargetLostSignal>(OnTargetLost);
@@ -38,8 +38,8 @@ namespace UI
         
         private void OnDestroy()
         {
-            _signal.Unsubscribe<WorkSignal>(OnShowStopWorkButton);  // тут все норм(наверн нужно просто рекламу засунуть да и все ненужна тут кнопка StopWorkSignal)
-            _signal.Unsubscribe<StopWorkSignal>(OnStopWork);
+            _signal.Unsubscribe<WorkStateSignal>(OnShowStopWorkButton);  // тут все норм(наверн нужно просто рекламу засунуть да и все ненужна тут кнопка StopWorkSignal)
+            _signal.Unsubscribe<ActiveStateSignal>(OnStopWork);
             
             _signal.Unsubscribe<TargetSelectedSignal>(OnTargetSelected);
             _signal.Unsubscribe<TargetLostSignal>(OnTargetLost);

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Room
 {
-    public class Printer : MonoBehaviour
+    public class Printer : TriggerBase
     {
         [Header("")]
         [SerializeField] private OfficeFiles prefabFiles;
@@ -28,12 +28,8 @@ namespace Room
         
         private float shakeDuration;  
         private float scaleChangeDuration;
-
-        private bool _isDone;
         
         private Stack<OfficeFiles> _officeFileses =  new Stack<OfficeFiles>(10);
-
-        public bool IsDone => _isDone;
 
         private async void Start()
         {
@@ -50,7 +46,7 @@ namespace Room
 
         private async UniTask StartPrinting()
         {
-            _isDone = false;
+            isActive = false;
             _endPoint = endPoint.position;
             
             for (int i = 0; i < countSpawnFiles; i++)
@@ -61,7 +57,7 @@ namespace Room
                     .Append(printerView.DOScale(_startPrinterScale, scaleChangeDuration))
                     .OnComplete(ResetPrinter);
             }
-            _isDone = true;
+            isActive = true;
         }
 
         private async void ResetPrinter()

@@ -39,24 +39,33 @@ namespace Player
             _progressBar = GetComponentInChildren<ProgressBar>();
         }
         
-        
         private async void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out TriggerBase component))
             {
+                if(!component.IsActive) return;
+                
                 _progressBar.Show(component.DurationProgress, component.ViewImage);
                 await UniTask.WaitUntil(() => !_progressBar.IsActive);
                 
                 if(!_progressBar.IsDone) return;
-                
                 switch (component)
                 {
                     case TriggerWork workTrigger:
-                        _signalBus.Fire(new WorkSignal(workTrigger.transform, workTrigger.Chair.transform));
+                        _signalBus.Fire(new WorkStateSignal(workTrigger.transform, workTrigger.Chair.transform));
                         break;
                     
                     case TriggerBanana bananaTrigger:
                         bananaTrigger.gameObject.SetActive(false); 
+                        break;
+                    
+                    case Printer printer:
+                        printer.PickUp(point);
+                        
+                        _signalBus.Fire<IdleStateSignal>();
+                        await UniTask.WaitUntil(() => !printer.IsActive);
+                        _signalBus.Fire<ActiveStateSignal>();
+                        
                         break;
                     
                     default:
@@ -65,35 +74,16 @@ namespace Player
                 }
                 _signalBus.Fire(new InfoInventorySignal(component.NameInventory, component.TextInfo));
             }
-
-            if (other.TryGetComponent(out Printer printer))
-            {
-                if(! printer.IsDone) return;
-                printer.PickUp(point); // todo мб добвать состояние ожидания? (тип жди пока не закончится какое-то действие)
-            }
         }
 
         private void OnTriggerExit(Collider other)
         {
             if (other.GetComponent<TriggerBase>())
-            {
                 _progressBar.Close(false);
-            }
 
             if (other.GetComponent<Printer>())
-            {
                 _officeFileses = GetComponentsInChildren<OfficeFiles>().ToList();
-                if (_officeFileses.Count > 1) // todo временно 
-                {
-                    // разбросать 
-                }
-            }
         }
-
-        private void CheckTrigger()
-        {
-            
-        }
-
+        
     }
 }

@@ -104,7 +104,7 @@ namespace Player
 
         private async UniTask ThrowObject()
         {
-            _animator.ThrowObj();
+            _animator.ThrowObject();
             await UniTask.Delay(900);// todo Мэджик
             
             var transform = _throwPoint.transform;

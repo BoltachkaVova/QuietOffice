@@ -37,7 +37,7 @@ namespace Player
             _animator.SetTrigger(ThrowAt);
         }
 
-        public void ThrowObj()
+        public void ThrowObject()
         {
             _animator.SetTrigger(Throw);
         }

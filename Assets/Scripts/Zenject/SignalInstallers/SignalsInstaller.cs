@@ -23,10 +23,15 @@ public class SignalsInstaller : Installer<SignalsInstaller>
 
     private void BildingPlayerSignals()
     {
-        Container.DeclareSignal<WorkSignal>();
-        Container.DeclareSignal<StopWorkSignal>();
+        Container.DeclareSignal<WorkStateSignal>();
+        Container.DeclareSignal<ActiveStateSignal>();
         
         Container.DeclareSignal<TargetSelectedSignal>();
         Container.DeclareSignal<TargetLostSignal>();
+        
+        Container.DeclareSignal<IdleStateSignal>();
+        
+        
+        
     }
 }
