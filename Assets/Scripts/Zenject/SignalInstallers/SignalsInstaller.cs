@@ -17,21 +17,19 @@ public class SignalsInstaller : Installer<SignalsInstaller>
 
     private void BildingButtonSignals()
     {
-        Container.DeclareSignal<OpenCloseInventorySignal>();
-        Container.DeclareSignal<ThrowSignal>();
+        
     }
 
     private void BildingPlayerSignals()
     {
         Container.DeclareSignal<WorkStateSignal>();
         Container.DeclareSignal<ActiveStateSignal>();
+        Container.DeclareSignal<ThrowStateSignal>();
+        Container.DeclareSignal<IdleStateSignal>();
         
         Container.DeclareSignal<TargetSelectedSignal>();
         Container.DeclareSignal<TargetLostSignal>();
         
-        Container.DeclareSignal<IdleStateSignal>();
-        
-        
-        
+        Container.DeclareSignal<BusySignal>();
     }
 }

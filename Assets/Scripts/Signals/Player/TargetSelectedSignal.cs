@@ -1,20 +1,20 @@
-﻿using Inventory;
-using Employees;
+﻿using Employees;
+using Enums;
 
 namespace Signals
 {
     public struct TargetSelectedSignal
     {
-        private InventoryBase _inventoryBase;
-        private EmployeesBase employeesBase;
+        private EmployeesBase _target;
+        private TypeInventory _typeInventory;
         
-        public InventoryBase InventoryBase => _inventoryBase;
-        public EmployeesBase EmployeesBase => employeesBase;
+        public EmployeesBase Target => _target;
+        public TypeInventory TypeInventory => _typeInventory;
 
-        public TargetSelectedSignal(InventoryBase inventoryBase, EmployeesBase employeesBase = null)
+        public TargetSelectedSignal(TypeInventory typeInventory, EmployeesBase target = null)
         {
-            _inventoryBase = inventoryBase;
-            this.employeesBase = employeesBase;
+            _target = target;
+            _typeInventory = typeInventory;
         }
     }
 }

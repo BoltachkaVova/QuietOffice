@@ -10,7 +10,7 @@ namespace Room
         [Header("")]
         [SerializeField] private OfficeFiles prefabFiles;
         [SerializeField] private Transform spawnPoint;
-        [SerializeField] private Transform endPoint;
+        [SerializeField] private Transform endTransform;
         [SerializeField] private Transform printerView;
         
         [Header("Settings Animation")]
@@ -47,7 +47,7 @@ namespace Room
         private async UniTask StartPrinting()
         {
             isActive = false;
-            _endPoint = endPoint.position;
+            _endPoint = endTransform.position;
             
             for (int i = 0; i < countSpawnFiles; i++)
             {
@@ -65,7 +65,7 @@ namespace Room
             printerView.localScale = _startPrinterScale;
             
             var files = Instantiate(prefabFiles, spawnPoint.position, Quaternion.Euler(90,0, 0));
-            await files.MoveIn(_endPoint, endPoint, 1);
+            await files.Throw(endTransform, _endPoint, endTransform.forward,1f);
             
             _officeFileses.Push(files);
             _endPoint.y += files.transform.localScale.y * 0.015f; // todo мэджик 0.015f... фрефаб "гг"
@@ -76,7 +76,7 @@ namespace Room
             var point = parentTransform.position;
             foreach (var files in _officeFileses)
             {
-                await files.MoveIn(point, parentTransform, 1f);
+                await files.Throw(parentTransform, point,parentTransform.forward,1f);
                 point.y += files.transform.localScale.y * 0.015f; // todo мэджик 0.015f... фрефаб "гг"
             }
             

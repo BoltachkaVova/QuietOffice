@@ -1,6 +1,4 @@
-﻿
-
-namespace Room
+﻿namespace Room
 {
     public class TriggerWork : TriggerBase
     {
@@ -9,7 +7,7 @@ namespace Room
 
         private void Awake()
         {
-            _chair = GetComponentInParent<Chair>();
+            _chair = GetComponentInChildren<Chair>();
         }
     }
 }

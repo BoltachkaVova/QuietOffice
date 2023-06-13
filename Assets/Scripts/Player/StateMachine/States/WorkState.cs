@@ -18,14 +18,14 @@ namespace Player
         private readonly PlayerAnimator _animator;
         private readonly Player _player;
         private readonly SignalBus _signalBus;
-        private readonly Joystick _joystick;
+      
 
-        public WorkState(PlayerAnimator animator, Player player, SignalBus signalBus, Joystick joystick)
+        public WorkState(PlayerAnimator animator, Player player, SignalBus signalBus)
         {
             _animator = animator;
             _player = player;
             _signalBus = signalBus;
-            _joystick = joystick;
+           
         }
         
         public void Initialize()
@@ -40,9 +40,6 @@ namespace Player
         
         public async void Enter()
         {
-            _joystick.gameObject.SetActive(false);
-            _joystick.OnPointerUp(null);
-
             await MoveToWorkPoint();
             
             _animator.StartedWork();
@@ -62,8 +59,8 @@ namespace Player
             
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_objTransform.DOMove(_startObjPosition, 0.8f)) // todo Мэджик
-                .Join(_player.transform.DOMove(_startObjPosition, 0.8f)).Play().SetLoops(0) // todo Мэджик
-                .OnComplete(()=> _joystick.gameObject.SetActive(true));
+                .Join(_player.transform.DOMove(_startObjPosition, 0.8f)).Play().SetLoops(0); // todo Мэджик
+            
         }
         
 

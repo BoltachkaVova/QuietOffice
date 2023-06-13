@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Enums;
+using Inventory;
 using Signals;
 using Room;
 using UnityEngine;
@@ -11,7 +14,7 @@ namespace Player
 {
     public class Player : MonoBehaviour
     {
-        [SerializeField] private Transform point;
+        [SerializeField] private Transform transformPoint;
         
         private ThrowPoint _throwPoint;
         private ProgressBar _progressBar;
@@ -20,9 +23,13 @@ namespace Player
         private Joystick _joystick;
         private SignalBus _signalBus;
         
-        public ThrowPoint ThrowPoint => _throwPoint;
-        
+        private bool _isBusy = false;
         private List<OfficeFiles> _officeFileses = new List<OfficeFiles>(20);
+        
+        public ThrowPoint ThrowPoint => _throwPoint;
+       
+        public bool IsBusy => _isBusy;
+        public List<OfficeFiles> OfficeFileses => _officeFileses;
         
 
         [Inject]
@@ -39,13 +46,14 @@ namespace Player
             _progressBar = GetComponentInChildren<ProgressBar>();
         }
         
+
         private async void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out TriggerBase component))
             {
-                if(!component.IsActive) return;
-                
+                if(!component.IsActive || _isBusy) return;
                 _progressBar.Show(component.DurationProgress, component.ViewImage);
+                
                 await UniTask.WaitUntil(() => !_progressBar.IsActive);
                 
                 if(!_progressBar.IsDone) return;
@@ -60,22 +68,30 @@ namespace Player
                         break;
                     
                     case Printer printer:
-                        printer.PickUp(point);
-                        
                         _signalBus.Fire<IdleStateSignal>();
+                        printer.PickUp(transformPoint);
+                        
                         await UniTask.WaitUntil(() => !printer.IsActive);
                         _signalBus.Fire<ActiveStateSignal>();
-                        
+                        _isBusy = true;
                         break;
                     
                     default:
                         Debug.Log($"Fail in Player {component.name}");
                         return;
                 }
-                _signalBus.Fire(new InfoInventorySignal(component.NameInventory, component.TextInfo));
+                
+                 _signalBus.Fire(new InfoInventorySignal(component.NameInventory, component.TextInfo));
             }
+            
+            if (other.TryGetComponent(out TriggerScatter floor) && _isBusy)  
+            {
+                _signalBus.Fire(new BusySignal(floor.transform));
+                _signalBus.Fire(new TargetSelectedSignal(TypeInventory.Files));
+                _signalBus.Subscribe<ThrowStateSignal>(OnThrowSignal);
+            }
+            
         }
-
         private void OnTriggerExit(Collider other)
         {
             if (other.GetComponent<TriggerBase>())
@@ -83,6 +99,15 @@ namespace Player
 
             if (other.GetComponent<Printer>())
                 _officeFileses = GetComponentsInChildren<OfficeFiles>().ToList();
+        }
+        
+
+        private void OnThrowSignal()
+        {
+            _isBusy = false;
+            _officeFileses.Clear();
+            
+            _signalBus.Unsubscribe<ThrowStateSignal>(OnThrowSignal);
         }
         
     }

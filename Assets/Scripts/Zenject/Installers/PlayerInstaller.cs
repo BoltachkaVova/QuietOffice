@@ -1,3 +1,4 @@
+using Inventory;
 using Player;
 using Zenject;
 
@@ -9,8 +10,9 @@ public class PlayerInstaller : Installer<PlayerInstaller>
         Container.Bind<IdleState>().AsSingle();
         
         Container.BindInterfacesAndSelfTo<WorkState>().AsSingle();
-        Container.BindInterfacesAndSelfTo<ThrowState>().AsSingle();
+        //Container.BindInterfacesAndSelfTo<ThrowState>().AsSingle();
         
-        Container.BindInterfacesAndSelfTo<PlayerStateMachine>().AsSingle().NonLazy();
+        Container.BindInterfacesTo<PlayerStateMachine>().AsSingle().NonLazy();
+        Container.BindInterfacesTo<InputController>().AsSingle().NonLazy();
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace Room
+﻿using UnityEngine;
+
+namespace Room
 {
-    public class WorkRoom : BaseRoom
+    public class WorkRoom : MonoBehaviour
     {
         
     }

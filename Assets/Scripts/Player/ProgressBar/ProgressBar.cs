@@ -55,8 +55,9 @@ namespace Player
         {
             _isActive = false;
             _isDone = isDone;
-
-            StopCoroutine(_progressCoroutine);
+            
+            if(_progressCoroutine != null)
+               StopCoroutine(_progressCoroutine);
             
             _canvasGroup.alpha = 0;
             _bar.fillAmount = 0;

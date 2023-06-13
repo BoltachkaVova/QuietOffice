@@ -33,12 +33,8 @@ namespace Player
             
             _signalBus.Subscribe<WorkStateSignal>(OnWorked);
             _signalBus.Subscribe<ActiveStateSignal>(OnActive);
-            
-            _signalBus.Subscribe<ThrowSignal>(OnThrow);
-            _signalBus.Subscribe<TargetLostSignal>(OnTargetLost);
-            
+            _signalBus.Subscribe<ThrowStateSignal>(OnThrow);
             _signalBus.Subscribe<IdleStateSignal>(OnIdle);
-            
         }
         
         public void Tick()
@@ -51,10 +47,7 @@ namespace Player
         {
             _signalBus.Unsubscribe<WorkStateSignal>(OnWorked);
             _signalBus.Unsubscribe<ActiveStateSignal>(OnActive);
-            
-            _signalBus.Unsubscribe<ThrowSignal>(OnThrow);
-            _signalBus.Unsubscribe<TargetLostSignal>(OnTargetLost);
-            
+            _signalBus.Unsubscribe<ThrowStateSignal>(OnThrow);
             _signalBus.Unsubscribe<IdleStateSignal>(OnIdle);
         }
         
@@ -80,10 +73,6 @@ namespace Player
             ChangeState(_throwState);   
         }
         
-        private void OnTargetLost()
-        {
-            ChangeState(_activeState);
-        }
         
         private void OnIdle()
         {

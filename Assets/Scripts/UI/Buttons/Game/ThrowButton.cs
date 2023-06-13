@@ -2,7 +2,7 @@
 
 namespace UI
 {
-    public class ThrowButton : BaseButton<ThrowSignal>
+    public class ThrowButton : BaseButton<ThrowStateSignal>
     {
      
     }

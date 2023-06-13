@@ -33,9 +33,12 @@ namespace UI
             
             _signal.Subscribe<TargetSelectedSignal>(OnTargetSelected);
             _signal.Subscribe<TargetLostSignal>(OnTargetLost);
- 
+            
+            
+            _signal.Subscribe<BusySignal>(OnBusy);
         }
         
+
         private void OnDestroy()
         {
             _signal.Unsubscribe<WorkStateSignal>(OnShowStopWorkButton);  // тут все норм(наверн нужно просто рекламу засунуть да и все ненужна тут кнопка StopWorkSignal)
@@ -43,7 +46,9 @@ namespace UI
             
             _signal.Unsubscribe<TargetSelectedSignal>(OnTargetSelected);
             _signal.Unsubscribe<TargetLostSignal>(OnTargetLost);
-
+            
+            
+            _signal.Unsubscribe<BusySignal>(OnBusy);
         }
         
         private async void OnShowStopWorkButton()
@@ -67,6 +72,11 @@ namespace UI
         private void OnTargetLost()
         {
             _throwButton.gameObject.SetActive(false);
+        }
+        
+        private void OnBusy()
+        {
+            _throwButton.gameObject.SetActive(true);
         }
     }
 }

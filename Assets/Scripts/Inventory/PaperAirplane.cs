@@ -1,9 +1,10 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Inventory
 {
-    public class PaperAirplane : InventoryBase
+    public class PaperAirplane : InventoryBase 
     {
         [SerializeField] private float speed;
 
@@ -20,11 +21,16 @@ namespace Inventory
             Debug.Log("Collision");
         }
 
-        private void Update()
+        private void Update() // todo поменять 
         {
             if(!_isActive) return;
             transform.Translate(Vector3.forward * (speed * Time.deltaTime));
         }
-        
+
+
+        public override async UniTask Throw(Transform parent, Vector3 point, Vector3 rotation, float duration)
+        {
+            
+        }
     }
 }

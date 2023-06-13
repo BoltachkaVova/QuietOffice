@@ -21,7 +21,7 @@ namespace Player
         
         public void Enter()
         {
-            
+            _joystick.gameObject.SetActive(true);
         }
 
         public void Update()
@@ -45,7 +45,8 @@ namespace Player
 
         public void Exit()
         {
-            
+            _joystick.gameObject.SetActive(false);
+            _joystick.OnPointerUp(null);
         }
     }
 }

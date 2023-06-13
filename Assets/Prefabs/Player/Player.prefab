@@ -3281,7 +3281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a24e7ea9409b4aa7a0863cdaabdf99a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  point: {fileID: 2112635475}
+  transformPoint: {fileID: 2112635475}
 --- !u!114 &1669560795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3294,6 +3294,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e2a2188ec76d314793c9977e57c1d0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bananaPrefab: {fileID: 8449873551434996342, guid: 62c84e29ce1b9d84ba627ec464e3ba32, type: 3}
+  airplanePrefab: {fileID: 7777040546908105469, guid: c000b6ee82cb6d8418b5a22dee06a2e4, type: 3}
 --- !u!1 &4223906460268308439
 GameObject:
   m_ObjectHideFlags: 0
