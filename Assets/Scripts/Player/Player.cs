@@ -49,7 +49,8 @@ namespace Player
 
         private async void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out TriggerBase component))
+
+            if (other.TryGetComponent(out TriggerWaitingBase component))
             {
                 if(!component.IsActive || _isBusy) return;
                 _progressBar.Show(component.DurationProgress, component.ViewImage);
@@ -59,15 +60,15 @@ namespace Player
                 if(!_progressBar.IsDone) return;
                 switch (component)
                 {
-                    case TriggerWork workTrigger:
+                    case TriggerWaitingWork workTrigger:
                         _signalBus.Fire(new WorkStateSignal(workTrigger.transform, workTrigger.Chair.transform));
                         break;
                     
-                    case TriggerBanana bananaTrigger:
+                    case TriggerWaitingBanana bananaTrigger:
                         bananaTrigger.gameObject.SetActive(false); 
                         break;
                     
-                    case Printer printer:
+                    case TriggerWaitingPrinter printer:
                         _signalBus.Fire<IdleStateSignal>();
                         printer.PickUp(transformPoint);
                         
@@ -80,11 +81,11 @@ namespace Player
                         Debug.Log($"Fail in Player {component.name}");
                         return;
                 }
-                
-                 _signalBus.Fire(new InfoInventorySignal(component.NameInventory, component.TextInfo));
+                _signalBus.Fire(new InfoInventorySignal(component.NameTrigger, component.TextInfo));
             }
             
-            if (other.TryGetComponent(out TriggerScatter floor) && _isBusy)  
+            
+            if (other.TryGetComponent(out TriggerWaitingScatter floor) && _isBusy)  
             {
                 _signalBus.Fire(new BusySignal(floor.transform));
                 _signalBus.Fire(new TargetSelectedSignal(TypeInventory.Files));
@@ -94,10 +95,10 @@ namespace Player
         }
         private void OnTriggerExit(Collider other)
         {
-            if (other.GetComponent<TriggerBase>())
+            if (other.GetComponent<TriggerWaitingBase>())
                 _progressBar.Close(false);
 
-            if (other.GetComponent<Printer>())
+            if (other.GetComponent<TriggerWaitingPrinter>())
                 _officeFileses = GetComponentsInChildren<OfficeFiles>().ToList();
         }
         

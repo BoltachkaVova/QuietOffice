@@ -2,7 +2,7 @@
 
 namespace Room
 {
-    public class TriggerScatter : MonoBehaviour
+    public abstract class TriggerPerformBase : MonoBehaviour
     {
         
     }

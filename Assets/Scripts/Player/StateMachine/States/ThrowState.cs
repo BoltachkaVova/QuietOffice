@@ -30,16 +30,17 @@ namespace Player
         private readonly PlayerAnimator _animator;
         private readonly Player _player;
         private readonly SignalBus _signalBus;
-        private readonly InventoryBase banana;
-        private readonly InventoryBase airplane;
+        
+        private readonly InventoryBase _banana; // todo is to add to the pool
+        private readonly InventoryBase _airplane; // todo is to add to the pool
 
         public ThrowState(PlayerAnimator animator, Player player, SignalBus signalBus, InventoryBase banana, InventoryBase airplane)
         {
             _animator = animator;
             _player = player;
             _signalBus = signalBus;
-            this.banana = banana;
-            this.airplane = airplane;
+            _banana = banana;
+            _airplane = airplane;
         }
         
         public void Initialize()
@@ -76,7 +77,6 @@ namespace Player
                     Debug.Log(TypeInventory.None);
                     break;
             }
-            
         }
 
         public void Update()
@@ -107,8 +107,8 @@ namespace Player
             _animator.ThrowAtEmployees();
             await UniTask.Delay(2000);// todo Мэджик
             
-            var banan = Object.Instantiate(banana, _throwPoint.transform.position, Quaternion.identity); // todo временно!! 
-            await banan.Throw(null, _target.transform.position, new Vector3(360, 0, 360), 1f);
+            var banan = Object.Instantiate(_banana, _throwPoint.transform.position, Quaternion.identity); // todo временно!! 
+            await banan.Throw( _target.transform.position, new Vector3(360, 0, 360));
             _isLookAt = false;
             
             ReturnActiveState();
@@ -120,7 +120,15 @@ namespace Player
             await UniTask.Delay(900);// todo Мэджик
             
             var transform = _throwPoint.transform;
-            Object.Instantiate(airplane, transform.position, transform.rotation);
+            var air = Object.Instantiate(_airplane, transform.position, transform.rotation); // todo временно!! 
+
+            var player = _player.transform;
+            var direction = air.transform.position + player.forward.normalized * 15;
+            
+            var target = new Vector3(direction.x, 0.1f, direction.z);
+            var rotation = new Vector3(0, player.rotation.y, 0);
+            
+            air.Throw(target, rotation);
             
             ReturnActiveState();
         }
@@ -129,7 +137,7 @@ namespace Player
         {
             List<UniTask> tasks = new List<UniTask>(20);
             
-            var fileses = _player.OfficeFileses; // todo this Pool
+            var fileses = _player.OfficeFileses; 
             var localScale = _transformRoom.localScale;
             
             foreach (var files in fileses)
@@ -139,7 +147,7 @@ namespace Player
                 var rotationX = Random.Range(0, 360);
                 var randomDuration = Random.Range(0.2f, 1f);
                 
-                tasks.Add(files.Throw(_transformRoom, randomVector, new Vector3(rotationX, -90, 0), randomDuration));
+                tasks.Add(files.Throw(randomVector,new Vector3(rotationX, -90, 0), _transformRoom, randomDuration));
             }
             await UniTask.WhenAll(tasks);
             ReturnActiveState();

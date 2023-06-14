@@ -1,36 +1,23 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Inventory
 {
     public class PaperAirplane : InventoryBase 
     {
-        [SerializeField] private float speed;
-
-        private bool _isActive;
-
-        private void OnEnable()
+        [SerializeField] private int lifeTimeSeconds = 5;
+        
+        public override async UniTask Throw(Vector3 point, Vector3 rotation, Transform parent = null, float randomDuration = 0f)
         {
-            _isActive = true;
+            await transform.DOJump(point, jumpPower, 1, duration).SetEase(Ease.InOutSine).SetEase(Ease.Linear).OnComplete(ObjectOff().Forget);
         }
-
-        private void OnCollisionEnter(Collision other)
+        
+        private async UniTaskVoid ObjectOff()
         {
-            _isActive = false;
-            Debug.Log("Collision");
-        }
-
-        private void Update() // todo поменять 
-        {
-            if(!_isActive) return;
-            transform.Translate(Vector3.forward * (speed * Time.deltaTime));
-        }
-
-
-        public override async UniTask Throw(Transform parent, Vector3 point, Vector3 rotation, float duration)
-        {
-            
+            await UniTask.Delay(lifeTimeSeconds * 1000);
+            gameObject.SetActive(false);
         }
     }
 }

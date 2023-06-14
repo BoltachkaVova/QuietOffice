@@ -6,10 +6,18 @@ namespace Inventory
 {
     public class Banana : InventoryBase
     {
-        public override async UniTask Throw(Transform parent, Vector3 point, Vector3 rotation, float duration)
+        [SerializeField] private int lifeTimeSeconds = 5;
+        
+        public override async UniTask Throw(Vector3 point, Vector3 rotation, Transform parent = null, float randomDuration = 0f)
         {
-           await transform.DOJump(point, 4f, 1, duration).SetEase(Ease.InOutSine)
-                .Join(transform.DORotate(rotation,duration, RotateMode.FastBeyond360)).SetEase(Ease.Linear);
+           await transform.DOJump(point, jumpPower, 1, duration).SetEase(Ease.InOutSine)
+                .Join(transform.DORotate(rotation,duration, RotateMode.FastBeyond360)).SetEase(Ease.Linear).OnComplete(ObjectOff().Forget);
+        }
+
+        private async UniTaskVoid ObjectOff()
+        {
+            await UniTask.Delay(lifeTimeSeconds * 1000);
+            gameObject.SetActive(false);
         }
     }
 }

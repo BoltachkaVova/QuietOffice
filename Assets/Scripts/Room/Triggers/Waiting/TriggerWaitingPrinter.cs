@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Room
 {
-    public class Printer : TriggerBase
+    public class TriggerWaitingPrinter : TriggerWaitingBase
     {
         [Header("")]
         [SerializeField] private OfficeFiles prefabFiles;
@@ -65,7 +65,7 @@ namespace Room
             printerView.localScale = _startPrinterScale;
             
             var files = Instantiate(prefabFiles, spawnPoint.position, Quaternion.Euler(90,0, 0));
-            await files.Throw(endTransform, _endPoint, endTransform.forward,1f);
+            await files.Throw( _endPoint,endTransform.forward, endTransform);
             
             _officeFileses.Push(files);
             _endPoint.y += files.transform.localScale.y * 0.015f; // todo мэджик 0.015f... фрефаб "гг"
@@ -76,12 +76,17 @@ namespace Room
             var point = parentTransform.position;
             foreach (var files in _officeFileses)
             {
-                await files.Throw(parentTransform, point,parentTransform.forward,1f);
+                await files.Throw(point ,parentTransform.forward, parentTransform);
                 point.y += files.transform.localScale.y * 0.015f; // todo мэджик 0.015f... фрефаб "гг"
             }
             
             _officeFileses.Clear();
             await StartPrinting();
+        }
+
+        public void ShowProgress()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

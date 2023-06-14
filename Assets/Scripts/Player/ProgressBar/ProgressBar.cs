@@ -6,11 +6,13 @@ namespace Player
 {
     public class ProgressBar : MonoBehaviour
     {
-        private CanvasGroup _canvasGroup;
-        private Transform _cameraTransform;
+        [SerializeField] private Image _viewImage;
         
-        private Image _viewImage;
+        private CanvasGroup _canvasGroup;
         private Image _bar;
+        
+        
+        private Transform _cameraTransform;
         private Coroutine _progressCoroutine;
         
         private bool _isActive;
@@ -22,7 +24,6 @@ namespace Player
 
         private void Awake()
         {
-            _viewImage = GetComponentInChildren<ViewImage>().GetComponent<Image>();
             _bar = GetComponent<Image>();
             _canvasGroup = GetComponent<CanvasGroup>();
         }

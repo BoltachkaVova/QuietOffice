@@ -108,12 +108,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f03979c3ea334244806d37a1cd7e4134, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeSpawnFiles: 1
-  countSpawnFiles: 30
+  viewImage: {fileID: 21300000, guid: 25c2ba6fc6378eb499968f1632ddc59a, type: 3}
+  nameTrigger: Documents
+  textInfo: Info
+  durationProgress: 2
+  isActive: 0
   prefabFiles: {fileID: -1379301840170132900, guid: 89e2608782f1ce948897205fd7bc8819, type: 3}
   spawnPoint: {fileID: 263715850997490431}
-  endPoint: {fileID: 8302701081336731339}
+  endTransform: {fileID: 0}
   printerView: {fileID: 5584843981360295966}
+  countSpawnFiles: 30
+  timeSpawnFiles: 1
   shakeForce: 0.05
   shakeRandomness: 90
   shakeVibrato: 10
