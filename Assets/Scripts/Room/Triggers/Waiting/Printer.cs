@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Room
 {
-    public class TriggerWaitingPrinter : TriggerWaitingBase
+    public class Printer : TriggerWaitingBase
     {
         [Header("")]
         [SerializeField] private OfficeFiles prefabFiles;
@@ -82,11 +82,6 @@ namespace Room
             
             _officeFileses.Clear();
             await StartPrinting();
-        }
-
-        public void ShowProgress()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

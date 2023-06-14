@@ -1,6 +1,6 @@
 ﻿namespace Room
 {
-    public class TriggerWaitingWork : TriggerWaitingBase
+    public class Work : TriggerWaitingBase
     {
         private Chair _chair;
         public Chair Chair => _chair;
@@ -9,10 +9,6 @@
         {
             _chair = GetComponentInChildren<Chair>();
         }
-
-        public void ShowProgress()
-        {
-            throw new System.NotImplementedException();
-        }
+        
     }
 }

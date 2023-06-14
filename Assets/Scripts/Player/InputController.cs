@@ -25,7 +25,7 @@ namespace Player
 
         public void Tick()
         {
-            if(_player.IsBusy) return;
+            if(_player.IsIgnore) return;
             
             if (Input.GetMouseButtonDown(1))  //  Input.touchCount > 1;
             {

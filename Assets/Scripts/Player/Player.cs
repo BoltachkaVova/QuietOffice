@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Enums;
-using Inventory;
 using Signals;
 using Room;
 using UnityEngine;
 using Zenject;
-
 
 namespace Player
 {
@@ -18,25 +15,19 @@ namespace Player
         
         private ThrowPoint _throwPoint;
         private ProgressBar _progressBar;
-        
-        private PlayerAnimator _animator;
-        private Joystick _joystick;
         private SignalBus _signalBus;
         
-        private bool _isBusy = false;
+        private bool _isIgnore = false;
         private List<OfficeFiles> _officeFileses = new List<OfficeFiles>(20);
         
         public ThrowPoint ThrowPoint => _throwPoint;
-       
-        public bool IsBusy => _isBusy;
+        public bool IsIgnore => _isIgnore;
         public List<OfficeFiles> OfficeFileses => _officeFileses;
         
 
         [Inject]
-        public void Construct(PlayerAnimator animator, Joystick joystick, SignalBus signalBus)
+        public void Construct(SignalBus signalBus)
         {
-            _animator = animator;
-            _joystick = joystick;
             _signalBus = signalBus;
         }
 
@@ -47,69 +38,84 @@ namespace Player
         }
         
 
-        private async void OnTriggerEnter(Collider other)
+        private async void OnTriggerEnter(Collider other) // todo в Level просто вкл/выкл триггеры 
         {
-
-            if (other.TryGetComponent(out TriggerWaitingBase component))
+            if (other.TryGetComponent(out TriggerWaitingBase triggerWaiting))
             {
-                if(!component.IsActive || _isBusy) return;
-                _progressBar.Show(component.DurationProgress, component.ViewImage);
-                
+                if(!triggerWaiting.IsActive || _isIgnore) return;
+                _progressBar.Show(triggerWaiting.DurationProgress, triggerWaiting.ViewImage);
                 await UniTask.WaitUntil(() => !_progressBar.IsActive);
                 
                 if(!_progressBar.IsDone) return;
-                switch (component)
-                {
-                    case TriggerWaitingWork workTrigger:
-                        _signalBus.Fire(new WorkStateSignal(workTrigger.transform, workTrigger.Chair.transform));
-                        break;
-                    
-                    case TriggerWaitingBanana bananaTrigger:
-                        bananaTrigger.gameObject.SetActive(false); 
-                        break;
-                    
-                    case TriggerWaitingPrinter printer:
-                        _signalBus.Fire<IdleStateSignal>();
-                        printer.PickUp(transformPoint);
-                        
-                        await UniTask.WaitUntil(() => !printer.IsActive);
-                        _signalBus.Fire<ActiveStateSignal>();
-                        _isBusy = true;
-                        break;
-                    
-                    default:
-                        Debug.Log($"Fail in Player {component.name}");
-                        return;
-                }
-                _signalBus.Fire(new InfoInventorySignal(component.NameTrigger, component.TextInfo));
+                CheckTriggerWaiting(triggerWaiting);
             }
             
-            
-            if (other.TryGetComponent(out TriggerWaitingScatter floor) && _isBusy)  
-            {
-                _signalBus.Fire(new BusySignal(floor.transform));
-                _signalBus.Fire(new TargetSelectedSignal(TypeInventory.Files));
-                _signalBus.Subscribe<ThrowStateSignal>(OnThrowSignal);
-            }
-            
+            if (other.TryGetComponent(out TriggerPerformBase triggerPerform) && _isIgnore)  
+                CheckTriggerPerform(triggerPerform);
         }
+        
         private void OnTriggerExit(Collider other)
         {
             if (other.GetComponent<TriggerWaitingBase>())
                 _progressBar.Close(false);
 
-            if (other.GetComponent<TriggerWaitingPrinter>())
+            if (other.GetComponent<Printer>())
                 _officeFileses = GetComponentsInChildren<OfficeFiles>().ToList();
         }
         
-
+        private async void CheckTriggerWaiting(TriggerWaitingBase component)
+        {
+            switch (component)
+            {
+                case Work workTrigger:
+                    _signalBus.Fire(new WorkStateSignal(workTrigger.transform, workTrigger.Chair.transform));
+                    break;
+                
+                case Printer printer:
+                    _signalBus.Fire<IdleStateSignal>();
+                    printer.PickUp(transformPoint);
+                        
+                    await UniTask.WaitUntil(() => !printer.IsActive);
+                    
+                    _signalBus.Fire<ActiveStateSignal>();
+                    _isIgnore = true;
+                    break;
+                
+                case TrashBin trashBin:
+                    Debug.Log($"Подобрали {trashBin.Inventory.Count}  мусора");
+                    break;
+                
+                default:
+                    Debug.Log($"Fail in Player {component.name}");
+                    return;
+            }
+            
+            _signalBus.Fire(new InfoInventorySignal(component.NameTrigger, component.TextInfo));
+        }
+        
+        private void CheckTriggerPerform(TriggerPerformBase trigger)
+        {
+            switch (trigger)
+            {
+                case Scatter:
+                    _signalBus.Fire(new BusySignal(trigger.transform));
+                    _signalBus.Fire(new TargetSelectedSignal(TypeInventory.Files));
+                    _signalBus.Subscribe<ThrowStateSignal>(OnThrowSignal);
+                    break;
+                
+                default:
+                    Debug.Log($"Fail in Player {trigger.name}");
+                    return;
+            }
+        }
+        
         private void OnThrowSignal()
         {
-            _isBusy = false;
+            _isIgnore = false;
             _officeFileses.Clear();
             
             _signalBus.Unsubscribe<ThrowStateSignal>(OnThrowSignal);
         }
-        
+
     }
 }
