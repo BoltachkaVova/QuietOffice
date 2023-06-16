@@ -60,7 +60,6 @@ namespace Player
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_objTransform.DOMove(_startObjPosition, 0.8f)) // todo Мэджик
                 .Join(_player.transform.DOMove(_startObjPosition, 0.8f)).Play().SetLoops(0); // todo Мэджик
-            
         }
         
 

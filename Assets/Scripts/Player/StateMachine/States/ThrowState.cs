@@ -47,14 +47,14 @@ namespace Player
         {
             _throwPoint = _player.ThrowPoint;
             
-            _signalBus.Subscribe<TargetSelectedSignal>(OnTargetSelected);
-            _signalBus.Subscribe<BusySignal>(OnBusy);
+            _signalBus.Subscribe<SelectedSignal>(OnTargetSelected);
+            _signalBus.Subscribe<ScatterHereSignal>(OnScatterHere);
         }
         
         public void Dispose()
         {
-            _signalBus.Unsubscribe<TargetSelectedSignal>(OnTargetSelected);
-            _signalBus.Unsubscribe<BusySignal>(OnBusy);
+            _signalBus.Unsubscribe<SelectedSignal>(OnTargetSelected);
+            _signalBus.Unsubscribe<ScatterHereSignal>(OnScatterHere);
         }
 
         public async void Enter()
@@ -62,21 +62,26 @@ namespace Player
             switch (_typeInventory)
             {
                 case TypeInventory.Airplane:
-                    await Throw();
+                    await ThrowAirplane();
                     break;
-                
+
                 case TypeInventory.Banana:
                     await ThrowAt();
                     break;
-                
+
                 case TypeInventory.Files:
-                    await Scatter();
+                    await ScatterFiles();
                     break;
-                
+
                 case TypeInventory.None:
                     Debug.Log(TypeInventory.None);
                     break;
+                
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+            
+            _signalBus.Fire<ActiveStateSignal>();
         }
 
         public void Update()
@@ -87,7 +92,7 @@ namespace Player
 
         public void Exit()
         {
-           
+            _signalBus.Fire<TargetLostSignal>();
         }
 
         private void LookAt()
@@ -107,20 +112,18 @@ namespace Player
             _animator.ThrowAtEmployees();
             await UniTask.Delay(2000);// todo Мэджик
             
-            var banan = Object.Instantiate(_banana, _throwPoint.transform.position, Quaternion.identity); // todo временно!! 
+            var banan = Object.Instantiate(_banana, _throwPoint.transform.position, Quaternion.identity); // todo in pool
             await banan.Throw( _target.transform.position, new Vector3(360, 0, 360));
             _isLookAt = false;
-            
-            ReturnActiveState();
         }
 
-        private async UniTask Throw()
+        private async UniTask ThrowAirplane()
         {
             _animator.ThrowObject();
             await UniTask.Delay(900);// todo Мэджик
             
             var transform = _throwPoint.transform;
-            var air = Object.Instantiate(_airplane, transform.position, transform.rotation); // todo временно!! 
+            var air = Object.Instantiate(_airplane, transform.position, transform.rotation); // todo in pool
 
             var player = _player.transform;
             var direction = air.transform.position + player.forward.normalized * 15;
@@ -129,11 +132,9 @@ namespace Player
             var rotation = new Vector3(0, player.rotation.y, 0);
             
             air.Throw(target, rotation);
-            
-            ReturnActiveState();
         }
         
-        private async UniTask Scatter()
+        private async UniTask ScatterFiles()
         {
             List<UniTask> tasks = new List<UniTask>(20);
             
@@ -144,32 +145,26 @@ namespace Player
             {
                 var randomVector = new Vector3(Random.Range(_positionRoom.x, _positionRoom.x + localScale.x),
                     _positionRoom.y,Random.Range(_positionRoom.z, _positionRoom.z + localScale.z));
+                
                 var rotationX = Random.Range(0, 360);
                 var randomDuration = Random.Range(0.2f, 1f);
                 
                 tasks.Add(files.Throw(randomVector,new Vector3(rotationX, -90, 0), _transformRoom, randomDuration));
             }
+            
             await UniTask.WhenAll(tasks);
-            ReturnActiveState();
         }
 
-        private void OnTargetSelected(TargetSelectedSignal selected)
+        private void OnTargetSelected(SelectedSignal selected)
         {
             _target = selected.Target;
             _typeInventory = selected.TypeInventory;
         }
         
-        private void OnBusy(BusySignal busySignal)
+        private void OnScatterHere(ScatterHereSignal scatterHereSignal)
         {
-            _transformRoom = busySignal.TransformRoom;
-            _positionRoom = busySignal.TransformRoom.position;
+            _transformRoom = scatterHereSignal.TransformRoom;
+            _positionRoom = scatterHereSignal.TransformRoom.position;
         }
-
-
-        private void ReturnActiveState()
-        {
-            _signalBus.Fire<ActiveStateSignal>();
-        }
-        
     }
 }

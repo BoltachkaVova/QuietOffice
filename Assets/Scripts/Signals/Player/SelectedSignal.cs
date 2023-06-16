@@ -3,7 +3,7 @@ using Enums;
 
 namespace Signals
 {
-    public struct TargetSelectedSignal
+    public struct SelectedSignal
     {
         private EmployeesBase _target;
         private TypeInventory _typeInventory;
@@ -11,7 +11,7 @@ namespace Signals
         public EmployeesBase Target => _target;
         public TypeInventory TypeInventory => _typeInventory;
 
-        public TargetSelectedSignal(TypeInventory typeInventory, EmployeesBase target = null)
+        public SelectedSignal(TypeInventory typeInventory, EmployeesBase target = null)
         {
             _target = target;
             _typeInventory = typeInventory;

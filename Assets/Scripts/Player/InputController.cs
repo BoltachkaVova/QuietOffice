@@ -9,7 +9,7 @@ using Zenject;
 
 namespace Player
 {
-    public class InputController: ITickable
+    public class InputController: ITickable, IInitializable, IDisposable
     {
         private EmployeesBase _target;
         
@@ -21,22 +21,29 @@ namespace Player
             _player = player;
             _signalBus = signalBus;
         }
+        public void Initialize()
+        {
+            
+        }
         
-
         public void Tick()
         {
             if(_player.IsIgnore) return;
             
             if (Input.GetMouseButtonDown(1))  //  Input.touchCount > 1;
             {
-                _signalBus.Fire(new TargetSelectedSignal(TypeInventory.Airplane));
-                ResetTarget().Forget();// todo временно... нужно сделать проверку, если _target находиться в зоне видимости камеры то можно что-то делать
+                _signalBus.Fire(new SelectedSignal(TypeInventory.Airplane));
+                ResetTarget().Forget();
             }
             
             if (!Input.GetMouseButtonDown(0)) return;
             CheckSelection();
         }
         
+        public void Dispose()
+        {
+           
+        }
         
         private void CheckSelection() 
         {
@@ -51,7 +58,7 @@ namespace Player
             {
                 case EmployeesBase target:
                     _target = target;
-                    _signalBus.Fire(new TargetSelectedSignal(TypeInventory.Banana, _target));
+                    _signalBus.Fire(new SelectedSignal(TypeInventory.Banana, _target));
                     break;
                 
                 default:
@@ -60,10 +67,10 @@ namespace Player
             }
                 
             employess.ThisSelection(true);
-            ResetTarget().Forget();// todo временно... нужно сделать проверку, если _target находиться в зоне видимости камеры то можно что-то делать
+            ResetTarget().Forget();
         }
         
-        private async UniTaskVoid ResetTarget() 
+        private async UniTaskVoid ResetTarget() // todo временно... нужно сделать проверку, если _target находиться в зоне видимости камеры то можно что-то делать
         {
             await UniTask.Delay(10000); // todo Мэджик
             _signalBus.Fire<TargetLostSignal>();
@@ -74,5 +81,6 @@ namespace Player
             _target = null;
         }
 
+      
     }
 }

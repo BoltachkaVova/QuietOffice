@@ -27,9 +27,9 @@ public class SignalsInstaller : Installer<SignalsInstaller>
         Container.DeclareSignal<ThrowStateSignal>();
         Container.DeclareSignal<IdleStateSignal>();
         
-        Container.DeclareSignal<TargetSelectedSignal>();
+        Container.DeclareSignal<SelectedSignal>();
         Container.DeclareSignal<TargetLostSignal>();
         
-        Container.DeclareSignal<BusySignal>();
+        Container.DeclareSignal<ScatterHereSignal>();
     }
 }

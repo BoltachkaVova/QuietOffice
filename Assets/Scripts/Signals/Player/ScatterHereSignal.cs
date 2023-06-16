@@ -2,11 +2,11 @@
 
 namespace Signals
 {
-    public struct BusySignal
+    public struct ScatterHereSignal
     {
         private readonly Transform transformRoom;
 
-        public BusySignal(Transform transformRoom)
+        public ScatterHereSignal(Transform transformRoom)
         {
             this.transformRoom = transformRoom;
         }

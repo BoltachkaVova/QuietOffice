@@ -58,9 +58,12 @@ namespace Player
         {
             if (other.GetComponent<TriggerWaitingBase>())
                 _progressBar.Close(false);
-
+            
             if (other.GetComponent<Printer>())
-                _officeFileses = GetComponentsInChildren<OfficeFiles>().ToList();
+                _officeFileses = GetComponentsInChildren<OfficeFiles>().ToList(); // todo временно
+            
+            if(other.GetComponent<Scatter>())
+                _signalBus.Fire<TargetLostSignal>();
         }
         
         private async void CheckTriggerWaiting(TriggerWaitingBase component)
@@ -72,13 +75,12 @@ namespace Player
                     break;
                 
                 case Printer printer:
-                    _signalBus.Fire<IdleStateSignal>();
-                    printer.PickUp(transformPoint);
-                        
-                    await UniTask.WaitUntil(() => !printer.IsActive);
-                    
-                    _signalBus.Fire<ActiveStateSignal>();
                     _isIgnore = true;
+                    _signalBus.Fire<IdleStateSignal>();
+                    
+                    printer.PickUp(transformPoint);
+                    await UniTask.WaitUntil(() => !printer.IsActive);
+                    _signalBus.Fire<ActiveStateSignal>();
                     break;
                 
                 case TrashBin trashBin:
@@ -98,8 +100,8 @@ namespace Player
             switch (trigger)
             {
                 case Scatter:
-                    _signalBus.Fire(new BusySignal(trigger.transform));
-                    _signalBus.Fire(new TargetSelectedSignal(TypeInventory.Files));
+                    _signalBus.Fire(new ScatterHereSignal(trigger.transform));
+                    _signalBus.Fire(new SelectedSignal(TypeInventory.Files));
                     _signalBus.Subscribe<ThrowStateSignal>(OnThrowSignal);
                     break;
                 

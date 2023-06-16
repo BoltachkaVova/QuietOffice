@@ -72,8 +72,7 @@ namespace Player
         {
             ChangeState(_throwState);   
         }
-        
-        
+
         private void OnIdle()
         {
             ChangeState(_idleState);

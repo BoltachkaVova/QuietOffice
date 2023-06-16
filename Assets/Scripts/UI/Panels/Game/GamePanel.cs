@@ -3,7 +3,6 @@ using Signals;
 using UnityEngine;
 using Zenject;
 
-
 namespace UI
 {
     public class GamePanel : MonoBehaviour
@@ -28,55 +27,72 @@ namespace UI
 
         private void Start()
         {
-            _signal.Subscribe<WorkStateSignal>(OnShowStopWorkButton);
-            _signal.Subscribe<ActiveStateSignal>(OnStopWork);
+            _signal.Subscribe<WorkStateSignal>(OnWork);
+            _signal.Subscribe<ActiveStateSignal>(OnActive);
+            _signal.Subscribe<ThrowStateSignal>(OnThrow);
+            _signal.Subscribe<IdleStateSignal>(OnIdle);
             
-            _signal.Subscribe<TargetSelectedSignal>(OnTargetSelected);
+            _signal.Subscribe<SelectedSignal>(OnTargetSelect);
             _signal.Subscribe<TargetLostSignal>(OnTargetLost);
-            
-            
-            _signal.Subscribe<BusySignal>(OnBusy);
         }
         
-
         private void OnDestroy()
         {
-            _signal.Unsubscribe<WorkStateSignal>(OnShowStopWorkButton);  // тут все норм(наверн нужно просто рекламу засунуть да и все ненужна тут кнопка StopWorkSignal)
-            _signal.Unsubscribe<ActiveStateSignal>(OnStopWork);
+            _signal.Unsubscribe<WorkStateSignal>(OnWork); 
+            _signal.Unsubscribe<ActiveStateSignal>(OnActive);
+            _signal.Unsubscribe<ThrowStateSignal>(OnThrow);
+            _signal.Unsubscribe<IdleStateSignal>(OnIdle);
             
-            _signal.Unsubscribe<TargetSelectedSignal>(OnTargetSelected);
+            _signal.Unsubscribe<SelectedSignal>(OnTargetSelect);
             _signal.Unsubscribe<TargetLostSignal>(OnTargetLost);
-            
-            
-            _signal.Unsubscribe<BusySignal>(OnBusy);
         }
         
-        private async void OnShowStopWorkButton()
+        private async void OnWork()
         {
             await UniTask.Delay(10000);
-            _stopWorkButton.gameObject.SetActive(true);
+            ChangeButtons(TypeButton.StopWork);
         }
         
-        private void OnStopWork()
+        private void OnActive()
         {
-            _stopWorkButton.gameObject.SetActive(false);
+            ChangeButtons(TypeButton.None);
+            Debug.Log("UI Active");
         }
         
-        private void OnTargetSelected()
+        private void OnThrow()
         {
-            // todo тут вывести(панель), что можно сделать с этой целью, а пока что просто кнопка бросить "банан"
-            
-            _throwButton.gameObject.SetActive(true);
+            ChangeButtons(TypeButton.None);
+        }
+        
+        private void OnIdle()
+        {
+           ChangeButtons(TypeButton.None);
         }
         
         private void OnTargetLost()
         {
-            _throwButton.gameObject.SetActive(false);
+            ChangeButtons(TypeButton.None);
         }
-        
-        private void OnBusy()
+
+        private void OnTargetSelect()
         {
-            _throwButton.gameObject.SetActive(true);
+            ChangeButtons(TypeButton.Throw); // todo добавить еще возможности что-то делать с целью
         }
+
+        private void ChangeButtons(params TypeButton[] typeButton) 
+        {
+            foreach (var type in typeButton)
+            {
+                _throwButton.gameObject.SetActive(TypeButton.Throw == type);
+                _stopWorkButton.gameObject.SetActive(TypeButton.StopWork == type);
+            }
+        }
+    }
+
+    public enum TypeButton
+    {
+        None,
+        Throw,
+        StopWork
     }
 }
