@@ -11,12 +11,14 @@ namespace UI
         private StopWorkButton _stopWorkButton;
 
         private SignalBus _signal;
-        private InformationPanel _informationPanel; // todo entity 
+        private InventoryPanel _inventoryPanel;
+        
 
         [Inject]
-        public void Construct(SignalBus signalBus)
+        public void Construct(SignalBus signalBus, InventoryPanel inventoryPanel)
         {
             _signal = signalBus;
+            _inventoryPanel = inventoryPanel;
         }
 
         private void Awake()
@@ -32,7 +34,7 @@ namespace UI
             _signal.Subscribe<ThrowStateSignal>(OnThrow);
             _signal.Subscribe<IdleStateSignal>(OnIdle);
             
-            _signal.Subscribe<SelectedSignal>(OnTargetSelect);
+            _signal.Subscribe<SelectTargetSignal>(OnTargetSelect);
             _signal.Subscribe<TargetLostSignal>(OnTargetLost);
         }
         
@@ -43,53 +45,55 @@ namespace UI
             _signal.Unsubscribe<ThrowStateSignal>(OnThrow);
             _signal.Unsubscribe<IdleStateSignal>(OnIdle);
             
-            _signal.Unsubscribe<SelectedSignal>(OnTargetSelect);
+            _signal.Unsubscribe<SelectTargetSignal>(OnTargetSelect);
             _signal.Unsubscribe<TargetLostSignal>(OnTargetLost);
         }
         
         private async void OnWork()
         {
             await UniTask.Delay(10000);
-            ChangeButtons(TypeButton.StopWork);
+            ChangeButtons(TypeButtons.StopWork);
         }
         
         private void OnActive()
         {
-            ChangeButtons(TypeButton.None);
-            Debug.Log("UI Active");
+            ChangeButtons(TypeButtons.None);
         }
         
         private void OnThrow()
         {
-            ChangeButtons(TypeButton.None);
+            ChangeButtons(TypeButtons.None);
         }
         
         private void OnIdle()
         {
-           ChangeButtons(TypeButton.None);
+           ChangeButtons(TypeButtons.None);
         }
         
         private void OnTargetLost()
         {
-            ChangeButtons(TypeButton.None);
+            ChangeButtons(TypeButtons.None);
         }
 
-        private void OnTargetSelect()
+        private void OnTargetSelect(SelectTargetSignal select)
         {
-            ChangeButtons(TypeButton.Throw); // todo добавить еще возможности что-то делать с целью
+            if(select.Target == null)
+                ChangeButtons(TypeButtons.Throw);
+            else
+                _inventoryPanel.gameObject.SetActive(true);
         }
 
-        private void ChangeButtons(params TypeButton[] typeButton) 
+        private void ChangeButtons(params TypeButtons[] typeButton) 
         {
             foreach (var type in typeButton)
             {
-                _throwButton.gameObject.SetActive(TypeButton.Throw == type);
-                _stopWorkButton.gameObject.SetActive(TypeButton.StopWork == type);
+                _throwButton.gameObject.SetActive(TypeButtons.Throw == type);
+                _stopWorkButton.gameObject.SetActive(TypeButtons.StopWork == type);
             }
         }
     }
 
-    public enum TypeButton
+    public enum TypeButtons
     {
         None,
         Throw,

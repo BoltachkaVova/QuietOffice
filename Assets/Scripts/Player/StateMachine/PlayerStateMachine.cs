@@ -7,7 +7,7 @@ namespace Player
 {
     public class PlayerStateMachine : IInitializable, ITickable, IDisposable
     {
-        private bool _isTick;
+        private bool _isTick = true;
         
         private IState _currentState;
         private readonly ActiveState _activeState;
@@ -29,7 +29,6 @@ namespace Player
         public void Initialize()
         {
             ChangeState(_activeState); // todo временно!!!
-            _isTick = true;
             
             _signalBus.Subscribe<WorkStateSignal>(OnWorked);
             _signalBus.Subscribe<ActiveStateSignal>(OnActive);
@@ -60,11 +59,13 @@ namespace Player
         
         private void OnWorked()
         {
+            _isTick = false;
             ChangeState(_workState);
         }
         
         private void OnActive()
         {
+            _isTick = true;
             ChangeState(_activeState);
         }
         
@@ -75,6 +76,7 @@ namespace Player
 
         private void OnIdle()
         {
+            _isTick = false;
             ChangeState(_idleState);
         }
 

@@ -5,7 +5,6 @@ public class SignalsInstaller : Installer<SignalsInstaller>
 {
     public override void InstallBindings()
     {
-        BildingButtonSignals();
         BildingPlayerSignals();
         BildingTextSignals();
     }
@@ -15,11 +14,7 @@ public class SignalsInstaller : Installer<SignalsInstaller>
         Container.DeclareSignal<InfoInventorySignal>();
     }
 
-    private void BildingButtonSignals()
-    {
-        
-    }
-
+   
     private void BildingPlayerSignals()
     {
         Container.DeclareSignal<WorkStateSignal>();
@@ -27,7 +22,7 @@ public class SignalsInstaller : Installer<SignalsInstaller>
         Container.DeclareSignal<ThrowStateSignal>();
         Container.DeclareSignal<IdleStateSignal>();
         
-        Container.DeclareSignal<SelectedSignal>();
+        Container.DeclareSignal<SelectTargetSignal>();
         Container.DeclareSignal<TargetLostSignal>();
         
         Container.DeclareSignal<ScatterHereSignal>();

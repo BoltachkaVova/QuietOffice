@@ -5,16 +5,16 @@ namespace Employees
 {
     public abstract class EmployeesBase : MonoBehaviour, ISelection
     {
-        private Selection _selection;
+        private SelectionView selectionView;
 
         private void Awake()
         {
-            _selection = GetComponentInChildren<Selection>();
+            selectionView = GetComponentInChildren<SelectionView>();
         }
 
         public void ThisSelection(bool isOn)
         {
-            _selection.IsOn(isOn);
+            selectionView.IsOn(isOn);
         }
     }
 }

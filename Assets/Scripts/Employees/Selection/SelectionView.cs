@@ -3,7 +3,7 @@
 
 namespace Employees
 {
-    public class Selection : MonoBehaviour
+    public class SelectionView : MonoBehaviour
     {
         private CanvasGroup _canvasGroup;
         private void Awake()

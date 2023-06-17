@@ -29,13 +29,7 @@ namespace Player
         public void Tick()
         {
             if(_player.IsIgnore) return;
-            
-            if (Input.GetMouseButtonDown(1))  //  Input.touchCount > 1;
-            {
-                _signalBus.Fire(new SelectedSignal(TypeInventory.Airplane));
-                ResetTarget().Forget();
-            }
-            
+
             if (!Input.GetMouseButtonDown(0)) return;
             CheckSelection();
         }
@@ -58,7 +52,7 @@ namespace Player
             {
                 case EmployeesBase target:
                     _target = target;
-                    _signalBus.Fire(new SelectedSignal(TypeInventory.Banana, _target));
+                    _signalBus.Fire(new SelectTargetSignal(_target, TypeInventory.None));
                     break;
                 
                 default:

@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using Enums;
+using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
 namespace UI
 {
-    public abstract class BaseButton<T> : MonoBehaviour where T : struct 
+    public abstract class BaseButton<T> : MonoBehaviour where T : struct
     {
         private Button _button;
         protected SignalBus _signalBus;

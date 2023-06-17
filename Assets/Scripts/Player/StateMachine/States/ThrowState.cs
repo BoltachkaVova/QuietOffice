@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using Interfases;
 using Inventory;
 using Employees;
 using Enums;
-using Room;
+using Pool;
 using Signals;
 using UnityEngine;
 using Zenject;
-using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace Player
@@ -31,29 +29,30 @@ namespace Player
         private readonly Player _player;
         private readonly SignalBus _signalBus;
         
-        private readonly InventoryBase _banana; // todo is to add to the pool
-        private readonly InventoryBase _airplane; // todo is to add to the pool
+        private readonly InventoryBase[] _items; // todo is to add to the pool
+        
+        private Pool<InventoryBase> _pool;
 
-        public ThrowState(PlayerAnimator animator, Player player, SignalBus signalBus, InventoryBase banana, InventoryBase airplane)
+        public ThrowState(PlayerAnimator animator, Player player, SignalBus signalBus, params InventoryBase[] items)
         {
             _animator = animator;
             _player = player;
             _signalBus = signalBus;
-            _banana = banana;
-            _airplane = airplane;
+            _items = items;
         }
         
         public void Initialize()
         {
             _throwPoint = _player.ThrowPoint;
+            GeneratePool();
             
-            _signalBus.Subscribe<SelectedSignal>(OnTargetSelected);
+            _signalBus.Subscribe<SelectTargetSignal>(OnSelectedTarget);
             _signalBus.Subscribe<ScatterHereSignal>(OnScatterHere);
         }
         
         public void Dispose()
         {
-            _signalBus.Unsubscribe<SelectedSignal>(OnTargetSelected);
+            _signalBus.Unsubscribe<SelectTargetSignal>(OnSelectedTarget);
             _signalBus.Unsubscribe<ScatterHereSignal>(OnScatterHere);
         }
 
@@ -61,24 +60,39 @@ namespace Player
         {
             switch (_typeInventory)
             {
+                case TypeInventory.None:
+                    break;
+                
                 case TypeInventory.Airplane:
                     await ThrowAirplane();
                     break;
-
+                
+                case TypeInventory.OffiseFiles:
+                    await ScatterFiles();
+                    break;
+                
                 case TypeInventory.Banana:
                     await ThrowAt();
                     break;
-
-                case TypeInventory.Files:
-                    await ScatterFiles();
+                
+                case TypeInventory.Cup:
+                    await ThrowAt();
                     break;
-
-                case TypeInventory.None:
-                    Debug.Log(TypeInventory.None);
+                
+                case TypeInventory.Package:
+                    await ThrowAt();
+                    break;
+                
+                case TypeInventory.Paper:
+                    await ThrowAt();
+                    break;
+                
+                case TypeInventory.TinCan:
+                    await ThrowAt();
                     break;
                 
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
             
             _signalBus.Fire<ActiveStateSignal>();
@@ -107,31 +121,43 @@ namespace Player
 
         private async UniTask ThrowAt()
         {
-            _isLookAt = true;
-            
-            _animator.ThrowAtEmployees();
-            await UniTask.Delay(2000);// todo Мэджик
-            
-            var banan = Object.Instantiate(_banana, _throwPoint.transform.position, Quaternion.identity); // todo in pool
-            await banan.Throw( _target.transform.position, new Vector3(360, 0, 360));
-            _isLookAt = false;
+            if (_pool.TryGetObject(out InventoryBase item, _typeInventory))
+            {
+                _isLookAt = true;
+                item.transform.position = _throwPoint.transform.position;
+                
+                var transform = _target.transform;
+                var point = transform.position + new Vector3(0,transform.localScale.y,0); 
+                
+                _animator.ThrowAtEmployees();
+                await UniTask.Delay(2000);// todo Мэджик
+                
+                item.Used(true);
+                item.Throw( point, new Vector3(360, 0, 360)).Forget();
+                
+                _isLookAt = false;
+            }
         }
 
         private async UniTask ThrowAirplane()
         {
-            _animator.ThrowObject();
-            await UniTask.Delay(900);// todo Мэджик
+            if (_pool.TryGetObject(out InventoryBase air, _typeInventory))
+            {
+                var transform = air.transform;
+                transform.position = _throwPoint.transform.position;
+                
+                var player = _player.transform;
+                var direction = transform.position + player.forward.normalized * 15;
             
-            var transform = _throwPoint.transform;
-            var air = Object.Instantiate(_airplane, transform.position, transform.rotation); // todo in pool
-
-            var player = _player.transform;
-            var direction = air.transform.position + player.forward.normalized * 15;
-            
-            var target = new Vector3(direction.x, 0.1f, direction.z);
-            var rotation = new Vector3(0, player.rotation.y, 0);
-            
-            air.Throw(target, rotation);
+                var target = new Vector3(direction.x, 0.1f, direction.z);
+                var rotation = new Vector3(0, player.rotation.y, 0);
+                
+                _animator.ThrowObject();
+                await UniTask.Delay(900);// todo Мэджик
+                
+                air.Used(true);
+                air.Throw(target, rotation).Forget();
+            }
         }
         
         private async UniTask ScatterFiles()
@@ -146,25 +172,33 @@ namespace Player
                 var randomVector = new Vector3(Random.Range(_positionRoom.x, _positionRoom.x + localScale.x),
                     _positionRoom.y,Random.Range(_positionRoom.z, _positionRoom.z + localScale.z));
                 
-                var rotationX = Random.Range(0, 360);
+                var rotationY = Random.Range(0, 360);
                 var randomDuration = Random.Range(0.2f, 1f);
                 
-                tasks.Add(files.Throw(randomVector,new Vector3(rotationX, -90, 0), _transformRoom, randomDuration));
+                tasks.Add(files.Throw(randomVector,new Vector3(0, rotationY, 0),_transformRoom, randomDuration));
             }
             
             await UniTask.WhenAll(tasks);
         }
 
-        private void OnTargetSelected(SelectedSignal selected)
+        private void OnSelectedTarget(SelectTargetSignal selectTarget)
         {
-            _target = selected.Target;
-            _typeInventory = selected.TypeInventory;
+            _target = selectTarget.Target;
+            _typeInventory = selectTarget.Type;
         }
+        
         
         private void OnScatterHere(ScatterHereSignal scatterHereSignal)
         {
             _transformRoom = scatterHereSignal.TransformRoom;
             _positionRoom = scatterHereSignal.TransformRoom.position;
+        }
+
+        private void GeneratePool()
+        {
+            _pool = new Pool<InventoryBase>(_player.transform);
+            foreach (var item in _items)
+                _pool.GeneratePool(item, 5); // todo Мэджик !!!
         }
     }
 }

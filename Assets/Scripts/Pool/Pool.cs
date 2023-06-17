@@ -1,47 +1,37 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Enums;
+using Inventory;
 using UnityEngine;
 
 namespace Pool
 {
-    public class Pool<T> where T : MonoBehaviour
+    public class Pool<T> where T : InventoryBase
         {
-            private const string Name = "InventoryPool";
-            private readonly int _countObject;
-        
-            private readonly T _prefab;
-            private readonly GameObject _parent;
-            private readonly List<GameObject> _pool = new List<GameObject>(10);
-
-            public GameObject Parent => _parent;
-
-            public Pool(T prefab, int countObject)
-            {
-                _prefab = prefab;
-                _countObject = countObject;
-                _parent = new GameObject(Name);
+            private readonly List<T> _pool = new List<T>(20);
+            private readonly Transform _parent;
             
-                GeneratePool(_prefab.gameObject, countObject);
+            public Pool(Transform parent)
+            {
+                _parent = parent;
             }
 
-            private void GeneratePool(GameObject prefab, int count)
+            public void GeneratePool(T prefab, int count)
             {
                 for (int i = 0; i < count; i++)
                 {
-                    var item = Object.Instantiate(prefab, _parent.transform);
-                    item.SetActive(false);
+                    var item = Object.Instantiate(prefab, _parent);
+                    item.Used(false);
+                    
                     _pool.Add(item);
                 }
             }
-
-            public bool TryGetObject(out GameObject item)
-            {
-                item = _pool.FirstOrDefault(ob => ob.activeSelf == false);
-                
-                if(item == null) 
-                    GeneratePool(_prefab.gameObject, _countObject);
             
+            public bool TryGetObject(out T item, TypeInventory type)
+            {
+                item = _pool.FirstOrDefault(ob => !ob.IsUse && ob.TypeInventory == type);
                 return item != null;
             }
+
         }
 }

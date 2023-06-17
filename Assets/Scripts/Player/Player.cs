@@ -2,6 +2,7 @@
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Enums;
+using Inventory;
 using Signals;
 using Room;
 using UnityEngine;
@@ -43,6 +44,7 @@ namespace Player
             if (other.TryGetComponent(out TriggerWaitingBase triggerWaiting))
             {
                 if(!triggerWaiting.IsActive || _isIgnore) return;
+                
                 _progressBar.Show(triggerWaiting.DurationProgress, triggerWaiting.ViewImage);
                 await UniTask.WaitUntil(() => !_progressBar.IsActive);
                 
@@ -100,8 +102,8 @@ namespace Player
             switch (trigger)
             {
                 case Scatter:
-                    _signalBus.Fire(new ScatterHereSignal(trigger.transform));
-                    _signalBus.Fire(new SelectedSignal(TypeInventory.Files));
+                    _signalBus.Fire(new ScatterHereSignal(trigger.transform)); // todo мб сделать один сигнал? 
+                    _signalBus.Fire(new SelectTargetSignal(null,TypeInventory.OffiseFiles));
                     _signalBus.Subscribe<ThrowStateSignal>(OnThrowSignal);
                     break;
                 

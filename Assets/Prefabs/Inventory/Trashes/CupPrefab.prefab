@@ -11,10 +11,11 @@ GameObject:
   - component: {fileID: 5386414066421764723}
   - component: {fileID: 679868887048482414}
   - component: {fileID: 533088552609408525}
-  - component: {fileID: 4727990562653148601}
   - component: {fileID: -1252181109022601500}
+  - component: {fileID: 3707350830727889876}
+  - component: {fileID: 7128857064624787259}
   m_Layer: 0
-  m_Name: TrashesBeakerPrefab
+  m_Name: CupPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85,19 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &4727990562653148601
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1984501904239977740}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.15796238
-  m_Center: {x: -0.0010432787, y: 0.0025555603, z: 0.0418395}
 --- !u!114 &-1252181109022601500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,3 +100,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 1
   jumpPower: 2
+  lifeTimeSeconds: 5
+  typeInventory: 4
+--- !u!54 &3707350830727889876
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984501904239977740}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &7128857064624787259
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984501904239977740}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.20406488, y: 0.1589635, z: 0.31592476}
+  m_Center: {x: -0.0010432787, y: 0.0025555603, z: 0.0418395}

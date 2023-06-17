@@ -4,7 +4,11 @@
     {
         None,
         Banana,
-        Files,
-        Airplane
+        OffiseFiles,
+        Airplane,
+        Cup,
+        Package,
+        Paper,
+        TinCan
     }
 }

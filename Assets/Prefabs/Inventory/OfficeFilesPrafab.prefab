@@ -99,3 +99,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 1
   jumpPower: 2
+  lifeTimeSeconds: 0
+  typeInventory: 2

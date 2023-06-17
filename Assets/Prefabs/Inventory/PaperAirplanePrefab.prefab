@@ -131,3 +131,4 @@ MonoBehaviour:
   duration: 5
   jumpPower: 2
   lifeTimeSeconds: 5
+  typeInventory: 3

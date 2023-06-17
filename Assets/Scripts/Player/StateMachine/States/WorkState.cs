@@ -48,6 +48,11 @@ namespace Player
             _objTransform.DOMove(_player.transform.position,0.8f); // todo Мэджик
         }
 
+        private void StartWork()
+        {
+            
+        }
+
         public void Update()
         {
             
