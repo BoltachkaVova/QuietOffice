@@ -17,7 +17,7 @@ namespace Player
     {
         private EmployeesBase _target;
         private ThrowPoint _throwPoint;
-        private TypeInventory _typeInventory;
+        private TypeInventory _type;
         
         private float _speedRotate = 7f;
         private bool _isLookAt;
@@ -48,17 +48,21 @@ namespace Player
             
             _signalBus.Subscribe<SelectTargetSignal>(OnSelectedTarget);
             _signalBus.Subscribe<ScatterHereSignal>(OnScatterHere);
+            
+            _signalBus.Subscribe<ThrowStateSignal>(OnSelectedInventory);
         }
         
         public void Dispose()
         {
             _signalBus.Unsubscribe<SelectTargetSignal>(OnSelectedTarget);
             _signalBus.Unsubscribe<ScatterHereSignal>(OnScatterHere);
+            
+            _signalBus.Unsubscribe<ThrowStateSignal>(OnSelectedInventory);
         }
 
         public async void Enter()
         {
-            switch (_typeInventory)
+            switch (_type)
             {
                 case TypeInventory.None:
                     break;
@@ -68,7 +72,7 @@ namespace Player
                     break;
                 
                 case TypeInventory.OffiseFiles:
-                    await ScatterFiles();
+                    await ScatterFiles(); // todo беда с разбросом файлов!!!
                     break;
                 
                 case TypeInventory.Banana:
@@ -89,9 +93,6 @@ namespace Player
                 
                 case TypeInventory.TinCan:
                     await ThrowAt();
-                    break;
-                
-                default:
                     break;
             }
             
@@ -121,7 +122,7 @@ namespace Player
 
         private async UniTask ThrowAt()
         {
-            if (_pool.TryGetObject(out InventoryBase item, _typeInventory))
+            if (_pool.TryGetObject(out InventoryBase item, _type))
             {
                 _isLookAt = true;
                 item.transform.position = _throwPoint.transform.position;
@@ -141,7 +142,7 @@ namespace Player
 
         private async UniTask ThrowAirplane()
         {
-            if (_pool.TryGetObject(out InventoryBase air, _typeInventory))
+            if (_pool.TryGetObject(out InventoryBase air, _type))
             {
                 var transform = air.transform;
                 transform.position = _throwPoint.transform.position;
@@ -179,19 +180,26 @@ namespace Player
             }
             
             await UniTask.WhenAll(tasks);
+            _player.OnIgnore(false);
         }
 
         private void OnSelectedTarget(SelectTargetSignal selectTarget)
         {
             _target = selectTarget.Target;
-            _typeInventory = selectTarget.Type;
         }
         
-        
-        private void OnScatterHere(ScatterHereSignal scatterHereSignal)
+        private void OnSelectedInventory(ThrowStateSignal inventory)
         {
-            _transformRoom = scatterHereSignal.TransformRoom;
-            _positionRoom = scatterHereSignal.TransformRoom.position;
+            if(inventory.Type == TypeInventory.None) return;
+            
+            _type = inventory.Type;
+        }
+        
+        private void OnScatterHere(ScatterHereSignal scatterHere)
+        {
+            _transformRoom = scatterHere.TransformRoom;
+            _positionRoom = scatterHere.TransformRoom.position;
+            _type = scatterHere.Type;
         }
 
         private void GeneratePool()

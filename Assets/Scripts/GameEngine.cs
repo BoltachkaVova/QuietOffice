@@ -1,5 +1,5 @@
 ﻿using System;
-using UnityEngine;
+using DG.Tweening;
 using Zenject;
 
 namespace QuietOffice
@@ -8,7 +8,7 @@ namespace QuietOffice
     {
         public void Initialize()
         {
-            Debug.Log("GameEngine");
+            DOTween.SetTweensCapacity(500, 50);
         }
 
         public void Dispose()

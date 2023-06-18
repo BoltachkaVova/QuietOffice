@@ -9,8 +9,7 @@ namespace UI
         [SerializeField] private TypeInventory typeInventory;
         protected override void OnClick()
         {
-            _signalBus.Fire(new SelectTargetSignal(null, typeInventory));
-            _signalBus.Fire<ThrowStateSignal>();
+            _signalBus.Fire(new ThrowStateSignal(typeInventory));
         }
     }
 }

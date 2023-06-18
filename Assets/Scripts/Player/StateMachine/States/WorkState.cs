@@ -25,7 +25,6 @@ namespace Player
             _animator = animator;
             _player = player;
             _signalBus = signalBus;
-           
         }
         
         public void Initialize()
@@ -41,18 +40,9 @@ namespace Player
         public async void Enter()
         {
             await MoveToWorkPoint();
-            
-            _animator.StartedWork();
-            
-            await UniTask.Delay(4100); // todo Мэджик
-            _objTransform.DOMove(_player.transform.position,0.8f); // todo Мэджик
+            StartWork();
         }
-
-        private void StartWork()
-        {
-            
-        }
-
+        
         public void Update()
         {
             
@@ -75,7 +65,7 @@ namespace Player
             
             _startObjPosition = obj.ObjTransform.position;
         }
-
+        
         private async UniTask MoveToWorkPoint()
         {
             var rotation = _triggerTransform.localRotation;
@@ -86,6 +76,13 @@ namespace Player
                 .OnComplete(() => _animator.Move(0f));
             
             _player.transform.rotation = Quaternion.Lerp(_player.transform.rotation, rotation, 2f); // todo Мэджик
+        }
+        
+        private async void StartWork()
+        {
+            _animator.StartedWork();
+            await UniTask.Delay(4100); // todo Мэджик
+            _objTransform.DOMove(_player.transform.position,0.8f); // todo Мэджик
         }
     }
 }

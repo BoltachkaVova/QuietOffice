@@ -52,7 +52,7 @@ namespace Player
             {
                 case EmployeesBase target:
                     _target = target;
-                    _signalBus.Fire(new SelectTargetSignal(_target, TypeInventory.None));
+                    _signalBus.Fire(new SelectTargetSignal(_target));
                     break;
                 
                 default:
