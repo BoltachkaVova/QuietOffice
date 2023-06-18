@@ -84,7 +84,7 @@ namespace Player
         {
             _animator.StartedWork();
             await UniTask.Delay(4100); // todo Мэджик
-            _objTransform.DOMove(_player.transform.position,0.8f); // todo Мэджик
+            await _objTransform.DOMove(_player.transform.position,0.8f); // todo Мэджик
         }
     }
 }

@@ -47,15 +47,14 @@ namespace Room
             
             foreach (var file in prefabsFiles)
                 _pool.GeneratePool(file, countGenerateFiles);
-            
-            ReturnToWorkingCondition();
         }
 
         private async void Start()
         {
             _startPrinterScale = printerView.localScale;
             shakeDuration = scaleChangeDuration = timeSpawnFiles * 0.5f;
-
+            
+            ReturnInWorkState();
             await StartPrinting();
         }
 
@@ -66,14 +65,14 @@ namespace Room
 
         private async UniTask StartPrinting()
         {
-            isActive = false;
-            _endPoint = endTransform.position;
+            isActiveTrigger = false;
             
+            _endPoint = endTransform.position;
             var count = countSpawnFiles;
+           
             while (!_isBreak)
             {
-                count--;
-                if(count == 0) Break(true);
+                if(--count == 0) _isBreak = true;
                 
                 printerSequence = DOTween.Sequence();
                 await printerSequence
@@ -81,7 +80,8 @@ namespace Room
                     .Join(printerView.DOScale(_startPrinterScale + scaleChangeAmount, scaleChangeDuration))
                     .Append(printerView.DOScale(_startPrinterScale, scaleChangeDuration)).OnStart(ResetPrinter);
             }
-            isActive = true;
+            isActiveTrigger = true;
+            
         }
 
         private void ResetPrinter()
@@ -98,34 +98,35 @@ namespace Room
             _endPoint.y += files.transform.localScale.y * 0.015f;
         }
 
-        public async void PickUp(Transform parentTransform)
+        public async void PickUp(Transform parentTransform) 
         {
             var point = parentTransform.position;
             foreach (var files in _officeFileses)
             {
                 await files.Throw(point ,parentTransform.forward, parentTransform);
-                point.y += files.transform.localScale.y * 0.015f; 
+                point.y += files.transform.localScale.y * 0.015f;
             }
             
             _officeFileses.Clear();
+            ReturnInWorkState();
+            
             await StartPrinting();
         }
 
-        public void ReturnToWorkingCondition() // починить может кто-то 
+        public void ReturnInWorkState()
         {
             Break(false);
-            Change(); 
+            Change(true);
         }
 
         public void Break(bool isOn) // todo игрок может сломать принтер 
         {
             _isBreak = isOn;
-            // todo сделать анимацию принтера что он тип тупо трясется и все. + звук мб
         }
 
-        public void Change() 
+        public void Change(bool isOn) // todo игрок может подложить другую бумагу
         {
-            _type = _type == TypeInventory.Files ? TypeInventory.TrashFiles : TypeInventory.Files;
+            _type = isOn ? TypeInventory.Files : TypeInventory.TrashFiles;
         }
     }
 }

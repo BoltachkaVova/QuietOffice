@@ -2,16 +2,16 @@
 {
     public struct InfoInventorySignal
     {
-        private readonly string nameText;
-        private readonly string infoText;
+        private readonly string _nameText;
+        private readonly string _infoText;
         
-        public string NameText => nameText;
-        public string InfoText => infoText;
+        public string NameText => _nameText;
+        public string InfoText => _infoText;
 
         public InfoInventorySignal(string nameText, string infoText)
         {
-            this.nameText = nameText;
-            this.infoText = infoText;
+            _nameText = nameText;
+            _infoText = infoText;
         }
     }
 }

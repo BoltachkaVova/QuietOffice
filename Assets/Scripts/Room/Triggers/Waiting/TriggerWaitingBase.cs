@@ -11,13 +11,13 @@ namespace Room
         [SerializeField] private int durationProgress;
         
         
-        [SerializeField] protected bool isActive;
+        [SerializeField] protected bool isActiveTrigger;
 
         public Sprite ViewImage => viewImage;
         public string NameTrigger => nameTrigger;
         public string TextInfo => textInfo;
         public int DurationProgress => durationProgress;
-        public bool IsActive => isActive;
+        public bool IsActiveTrigger => isActiveTrigger;
 
     }
 }

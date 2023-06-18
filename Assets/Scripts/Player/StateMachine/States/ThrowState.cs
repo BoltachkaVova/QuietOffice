@@ -64,38 +64,18 @@ namespace Player
         {
             switch (_type)
             {
-                case TypeInventory.None:
-                    break;
-                
                 case TypeInventory.Airplane:
                     await ThrowAirplane();
                     break;
                 
                 case TypeInventory.Files:
-                    await ScatterFiles(); // todo беда с разбросом файлов!!!
+                    await ScatterFiles();
                     break;
                 
-                case TypeInventory.Banana:
-                    await ThrowAt();
-                    break;
-                
-                case TypeInventory.Cup:
-                    await ThrowAt();
-                    break;
-                
-                case TypeInventory.Package:
-                    await ThrowAt();
-                    break;
-                
-                case TypeInventory.Paper:
-                    await ThrowAt();
-                    break;
-                
-                case TypeInventory.TinCan:
+                default:
                     await ThrowAt();
                     break;
             }
-            
             _signalBus.Fire<ActiveStateSignal>();
         }
 
@@ -122,6 +102,7 @@ namespace Player
 
         private async UniTask ThrowAt()
         {
+
             if (_pool.TryGetObject(out InventoryBase item, _type))
             {
                 _isLookAt = true;
@@ -186,12 +167,12 @@ namespace Player
         private void OnSelectedTarget(SelectTargetSignal selectTarget)
         {
             _target = selectTarget.Target;
+            Debug.Log(_target.name);
         }
         
         private void OnSelectedInventory(ThrowStateSignal inventory)
         {
             if(inventory.Type == TypeInventory.None) return;
-            
             _type = inventory.Type;
         }
         
@@ -206,7 +187,7 @@ namespace Player
         {
             _pool = new Pool<InventoryBase>(_player.transform);
             foreach (var item in _items)
-                _pool.GeneratePool(item, 5); // todo Мэджик !!!
+                _pool.GeneratePool(item, 2); // todo Мэджик !!!
         }
     }
 }

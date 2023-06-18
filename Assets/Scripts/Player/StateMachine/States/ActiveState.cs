@@ -5,7 +5,7 @@ namespace Player
 {
     public class ActiveState : IState
     {
-        private float _speed = 2f;
+        private float _speed = 2.5f;
         private float _speedRotate = 7f;
         
         private readonly PlayerAnimator _animator;
@@ -28,13 +28,15 @@ namespace Player
         {
             if (_joystick.Direction != Vector2.zero)
             {
+                Transform transform;
+                
                 var direction = new Vector3(_joystick.Direction.x, 0, _joystick.Direction.y);
-                _player.transform.rotation = Quaternion.Lerp(_player.transform.rotation,
+                (transform = _player.transform).rotation = Quaternion.Lerp(_player.transform.rotation,
                     Quaternion.LookRotation(direction),
                     _speedRotate * Time.deltaTime);
 
                 var magnitude = _joystick.Direction.magnitude;
-                _player.transform.position += _player.transform.forward * (_speed * Time.deltaTime * magnitude);
+                transform.position += transform.forward * (_speed * Time.deltaTime * magnitude);
                 _animator.Move(magnitude);
                 
                 return;

@@ -10,22 +10,23 @@ namespace Player
         private bool _isTick = true;
         
         private IState _currentState;
+        
         private readonly ActiveState _activeState;
         private readonly WorkState _workState;
         private readonly ThrowState _throwState;
         private readonly SignalBus _signalBus;
         private readonly IdleState _idleState;
-        private readonly BreakState _breakState;
+        private readonly ActionsState actionsState;
 
         public PlayerStateMachine(ActiveState activeState, WorkState workState,
-            ThrowState throwState, SignalBus signalBus, IdleState idleState, BreakState breakState)
+            ThrowState throwState, SignalBus signalBus, IdleState idleState, ActionsState actionsState)
         {
             _activeState = activeState;
             _workState = workState;
             _throwState = throwState;
             _signalBus = signalBus;
             _idleState = idleState;
-            _breakState = breakState;
+            this.actionsState = actionsState;
         }
 
         public void Initialize()
@@ -36,9 +37,8 @@ namespace Player
             _signalBus.Subscribe<ActiveStateSignal>(OnActive);
             _signalBus.Subscribe<ThrowStateSignal>(OnThrow);
             _signalBus.Subscribe<IdleStateSignal>(OnIdle);
-            _signalBus.Subscribe<BreakStateSignal>(OnBreak);
+            _signalBus.Subscribe<ActionStateSignal>(OnActions);
         }
-        
 
         public void Tick()
         {
@@ -52,7 +52,7 @@ namespace Player
             _signalBus.Unsubscribe<ActiveStateSignal>(OnActive);
             _signalBus.Unsubscribe<ThrowStateSignal>(OnThrow);
             _signalBus.Unsubscribe<IdleStateSignal>(OnIdle);
-            _signalBus.Unsubscribe<BreakStateSignal>(OnBreak);
+            _signalBus.Unsubscribe<ActionStateSignal>(OnActions);
         }
         
         private void ChangeState(IState state)
@@ -85,10 +85,10 @@ namespace Player
             ChangeState(_idleState);
         }
         
-        private void OnBreak()
+        private void OnActions()
         {
             _isTick = false;
-            ChangeState(_breakState);
+            ChangeState(actionsState);
         }
 
     }

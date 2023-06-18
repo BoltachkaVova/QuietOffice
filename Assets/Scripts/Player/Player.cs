@@ -49,7 +49,7 @@ namespace Player
         {
             if (other.TryGetComponent(out TriggerWaitingBase triggerWaiting))
             {
-                if (!triggerWaiting.IsActive || _isIgnore) return;
+                if (!triggerWaiting.IsActiveTrigger || _isIgnore) return;
 
                 _progressBar.Show(triggerWaiting.DurationProgress, triggerWaiting.ViewImage);
                 await UniTask.WaitUntil(() => !_progressBar.IsActive);
@@ -90,14 +90,13 @@ namespace Player
                 case Printer printer:
                     _isIgnore = true;
                     _signalBus.Fire<IdleStateSignal>();
-
                     printer.PickUp(transformPoint);
-                    await UniTask.WaitUntil(() => !printer.IsActive);
+                    await UniTask.WaitUntil(() => !printer.IsActiveTrigger);
                     _signalBus.Fire<ActiveStateSignal>();
                     break;
 
                 case TrashBin trashBin:
-                    Debug.Log($"Подобрали {trashBin.Inventory.Count}  мусора");
+                    Debug.Log($"Подобрали {trashBin.TrashBins[0].Inventory} мусор");
                     break;
 
                 default:

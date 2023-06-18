@@ -9,9 +9,8 @@ namespace Employees
         [SerializeField] protected TypeActionOnEmployees[] actionsOn;
         
         private SelectionView selectionView;
-
         public TypeActionOnEmployees[] ActionsOn => actionsOn;
-
+        
         private void Awake()
         {
             selectionView = GetComponentInChildren<SelectionView>();

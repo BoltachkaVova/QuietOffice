@@ -1,7 +1,6 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Enums;
 using Interfases;
 using Signals;
 using UnityEngine;
@@ -9,7 +8,7 @@ using Zenject;
 
 namespace Player
 {
-    public class BreakState : IState, IInitializable, IDisposable
+    public class ActionsState : IState, IInitializable, IDisposable
     {
         private Transform _transform;
         private IActions _target;
@@ -18,7 +17,7 @@ namespace Player
         private readonly Player _player;
         private readonly SignalBus _signal;
 
-        public BreakState(PlayerAnimator animator, Player player, SignalBus signal)
+        public ActionsState(PlayerAnimator animator, Player player, SignalBus signal)
         {
             _animator = animator;
             _player = player;
@@ -27,18 +26,18 @@ namespace Player
         
         public void Initialize()
         {
-            _signal.Subscribe<BreakStateSignal>(OnGetPoint);
+            _signal.Subscribe<ActionStateSignal>(OnGetPoint);
         }
 
         public void Dispose()
         {
-            _signal.Unsubscribe<BreakStateSignal>(OnGetPoint);
+            _signal.Unsubscribe<ActionStateSignal>(OnGetPoint);
         }
         
         public async void Enter()
         {
             await Move();
-            await Break();
+            Break();
             
             _signal.Fire<ActiveStateSignal>();
         }
@@ -53,10 +52,10 @@ namespace Player
             
         }
 
-        private async UniTask Break()
+        private void Break()
         {
-            _target.Break(false); // тип вот сломал
-            _target.Change(); // и тут поменял файлы наверн тип нужно убрать это глупо!!!
+            _target.Break(true); // тип вот сломал
+            _target.Change(false); // и тут поменял файлы наверн тип нужно убрать это глупо!!!
         }
         private async UniTask Move()
         {
@@ -72,7 +71,7 @@ namespace Player
             _player.transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 2f); // todo Мэджик
         }
 
-        private void OnGetPoint(BreakStateSignal signal)
+        private void OnGetPoint(ActionStateSignal signal)
         {
             _transform = signal.TransformObj;
             _target = signal.Actions;

@@ -5,11 +5,11 @@
         None,
         Banana,
         Files,
-        TrashFiles,
         Airplane,
-        Cup,
-        Package,
-        Paper,
-        TinCan
+        TrashCup,
+        TrashFiles,
+        TrashPackage,
+        TrashPaper,
+        TrashTinCan
     }
 }

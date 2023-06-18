@@ -101,7 +101,7 @@ MonoBehaviour:
   duration: 1
   jumpPower: 2
   lifeTimeSeconds: 5
-  typeInventory: 7
+  typeInventory: 8
 --- !u!54 &4190885709311711284
 Rigidbody:
   m_ObjectHideFlags: 0
