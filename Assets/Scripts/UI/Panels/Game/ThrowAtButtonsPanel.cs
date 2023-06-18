@@ -28,7 +28,7 @@ namespace UI
         private void Start()
         {
             _signal.Subscribe<SelectTargetSignal>(OnSelectTarget);
-            _signal.Subscribe<TargetLostSignal>(OnTagretLost);
+            _signal.Subscribe<TargetLostSignal>(OnTargetLost);
             
             _signal.Subscribe<ThrowStateSignal>(OnThrow);
         }
@@ -37,7 +37,7 @@ namespace UI
         private void OnDestroy()
         {
             _signal.Unsubscribe<SelectTargetSignal>(OnSelectTarget);
-            _signal.Unsubscribe<TargetLostSignal>(OnTagretLost);
+            _signal.Unsubscribe<TargetLostSignal>(OnTargetLost);
             
             _signal.Unsubscribe<ThrowStateSignal>(OnThrow);
         }
@@ -53,7 +53,7 @@ namespace UI
             ShowButtons(false);
         }
         
-        private void OnTagretLost()
+        private void OnTargetLost()
         {
             ShowButtons(false);
         }

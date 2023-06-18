@@ -12,13 +12,12 @@ namespace Room
         
         
         [SerializeField] protected bool isActive;
-        
+
         public Sprite ViewImage => viewImage;
         public string NameTrigger => nameTrigger;
         public string TextInfo => textInfo;
         public int DurationProgress => durationProgress;
         public bool IsActive => isActive;
-        
-        
+
     }
 }

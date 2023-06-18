@@ -72,10 +72,12 @@ namespace Player
             var position = _triggerTransform.position;
             
             _animator.Move(0.5f);
-            await _player.transform.DOMove(new Vector3(position.x, 0, position.z), 1f)  // todo Мэджик
+            
+            Transform transform;
+            await (transform = _player.transform).DOMove(new Vector3(position.x, 0, position.z), 1f)  // todo Мэджик
                 .OnComplete(() => _animator.Move(0f));
             
-            _player.transform.rotation = Quaternion.Lerp(_player.transform.rotation, rotation, 2f); // todo Мэджик
+            _player.transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 2f); // todo Мэджик
         }
         
         private async void StartWork()

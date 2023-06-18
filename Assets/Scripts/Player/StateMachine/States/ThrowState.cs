@@ -71,7 +71,7 @@ namespace Player
                     await ThrowAirplane();
                     break;
                 
-                case TypeInventory.OffiseFiles:
+                case TypeInventory.Files:
                     await ScatterFiles(); // todo беда с разбросом файлов!!!
                     break;
                 

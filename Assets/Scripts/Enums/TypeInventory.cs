@@ -4,7 +4,8 @@
     {
         None,
         Banana,
-        OffiseFiles,
+        Files,
+        TrashFiles,
         Airplane,
         Cup,
         Package,

@@ -15,15 +15,17 @@ namespace Player
         private readonly ThrowState _throwState;
         private readonly SignalBus _signalBus;
         private readonly IdleState _idleState;
+        private readonly BreakState _breakState;
 
         public PlayerStateMachine(ActiveState activeState, WorkState workState,
-            ThrowState throwState, SignalBus signalBus, IdleState idleState)
+            ThrowState throwState, SignalBus signalBus, IdleState idleState, BreakState breakState)
         {
             _activeState = activeState;
             _workState = workState;
             _throwState = throwState;
             _signalBus = signalBus;
             _idleState = idleState;
+            _breakState = breakState;
         }
 
         public void Initialize()
@@ -34,8 +36,10 @@ namespace Player
             _signalBus.Subscribe<ActiveStateSignal>(OnActive);
             _signalBus.Subscribe<ThrowStateSignal>(OnThrow);
             _signalBus.Subscribe<IdleStateSignal>(OnIdle);
+            _signalBus.Subscribe<BreakStateSignal>(OnBreak);
         }
         
+
         public void Tick()
         {
             if(!_isTick) return;
@@ -48,6 +52,7 @@ namespace Player
             _signalBus.Unsubscribe<ActiveStateSignal>(OnActive);
             _signalBus.Unsubscribe<ThrowStateSignal>(OnThrow);
             _signalBus.Unsubscribe<IdleStateSignal>(OnIdle);
+            _signalBus.Unsubscribe<BreakStateSignal>(OnBreak);
         }
         
         private void ChangeState(IState state)
@@ -78,6 +83,12 @@ namespace Player
         {
             _isTick = false;
             ChangeState(_idleState);
+        }
+        
+        private void OnBreak()
+        {
+            _isTick = false;
+            ChangeState(_breakState);
         }
 
     }

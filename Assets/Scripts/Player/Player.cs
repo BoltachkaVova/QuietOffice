@@ -113,7 +113,7 @@ namespace Player
             switch (trigger)
             {
                 case Scatter:
-                    _signalBus.Fire(new ScatterHereSignal(trigger.transform, TypeInventory.OffiseFiles));
+                    _signalBus.Fire(new ScatterHereSignal(trigger.transform, TypeInventory.Files));
                     break;
 
                 default:
