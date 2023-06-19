@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Enums;
-using Inventory;
 using UnityEngine;
 
 namespace Room
@@ -10,6 +9,7 @@ namespace Room
     {
         [SerializeField] private List<ConfigTrashBin> trashBins;
         public List<ConfigTrashBin> TrashBins => trashBins;
+        
     }
     
     [Serializable]

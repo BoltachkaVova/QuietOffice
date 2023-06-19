@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 1622032645127951099}
   - component: {fileID: 2390643451461852510}
   - component: {fileID: 489118591156726164}
-  - component: {fileID: 4183208402228146168}
   - component: {fileID: 6124846487240043357}
+  - component: {fileID: 6772155649687858743}
   m_Layer: 0
   m_Name: TrashbinTrigger
   m_TagString: Untagged
@@ -27,14 +27,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2146333233766205505}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -4.97, y: 0.44, z: 12.276999}
   m_LocalScale: {x: 60, y: 60, z: 60}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &2390643451461852510
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -86,19 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &4183208402228146168
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2146333233766205505}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.013547594, y: 0.017286586, z: 0.005816046}
-  m_Center: {x: -0.00020167133, y: 0.005209694, z: -0.0043955897}
 --- !u!114 &6124846487240043357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,5 +98,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d682a44b0f2944eb9874f24f14cdeb01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: 802b4fea41e94794c9941791d3407448, type: 2}
-  isActive: 1
+  viewImage: {fileID: 21300000, guid: d8eebe61728e9204da09d154fa86798f, type: 3}
+  nameTrigger: Trashbin
+  textInfo: Add inventory
+  durationProgress: 2
+  isActiveTrigger: 1
+  trashBins:
+  - inventory: 5
+    count: 3
+  - inventory: 6
+    count: 2
+  - inventory: 7
+    count: 1
+  - inventory: 8
+    count: 3
+--- !u!65 &6772155649687858743
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146333233766205505}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.017302811, y: 0.01988356, z: 0.0025816956}
+  m_Center: {x: 0.0007481913, y: 0.0065081795, z: -0.005543103}

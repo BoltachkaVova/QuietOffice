@@ -1,4 +1,5 @@
-﻿using Enums;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -15,6 +16,7 @@ namespace UI
         {
             _signalBus = signalBus;
         }
+        
 
         private void Start()
         {

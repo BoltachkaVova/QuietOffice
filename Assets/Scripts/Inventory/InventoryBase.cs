@@ -16,14 +16,12 @@ namespace Inventory
         public TypeInventory TypeInventory => typeInventory;
 
         public abstract UniTask Throw(Vector3 point, Vector3 rotation, Transform parent = null, float randomDuration = 0f);
-
-
+        
         public void Used(bool isOn)
         {
             _isUse = isOn;
             gameObject.SetActive(isOn);
         }
-
-
+        
     }
 }

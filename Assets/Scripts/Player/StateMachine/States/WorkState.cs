@@ -14,12 +14,10 @@ namespace Player
         private Transform _objTransform;
         private Vector3 _startObjPosition;
         
-        
         private readonly PlayerAnimator _animator;
         private readonly Player _player;
         private readonly SignalBus _signalBus;
-      
-
+        
         public WorkState(PlayerAnimator animator, Player player, SignalBus signalBus)
         {
             _animator = animator;
@@ -40,7 +38,7 @@ namespace Player
         public async void Enter()
         {
             await MoveToWorkPoint();
-            StartWork();
+            await StartWork();
         }
         
         public void Update()
@@ -80,7 +78,7 @@ namespace Player
             _player.transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 2f); // todo Мэджик
         }
         
-        private async void StartWork()
+        private async UniTask StartWork()
         {
             _animator.StartedWork();
             await UniTask.Delay(4100); // todo Мэджик

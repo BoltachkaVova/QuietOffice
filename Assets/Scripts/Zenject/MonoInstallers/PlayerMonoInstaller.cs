@@ -10,10 +10,8 @@ public class PlayerMonoInstaller : MonoInstaller
     public override void InstallBindings()
     {
         Container.Bind<Joystick>().FromComponentInHierarchy().AsSingle();
-
         Container.Bind<PlayerAnimator>().AsSingle().WithArguments(GetComponentInChildren<Animator>());
-        Container.Bind<Player.Player>().FromInstance(GetComponent<Player.Player>());
-        
+        Container.Bind<Player.Player>().FromInstance(GetComponent<Player.Player>()).AsSingle();
         
         Container.BindInterfacesAndSelfTo<ThrowState>().AsSingle().WithArguments(inventoryPrefabs);
         PlayerInstaller.Install(Container);

@@ -23,6 +23,7 @@ namespace Room
         
         [Header("Settings Animation")]
         [SerializeField] private Transform printerView;
+        [SerializeField] private float distanceBetweenFiles = 0.03f;
         [SerializeField] private float timeSpawnFiles = 1f;
         [SerializeField] private float shakeForce = 0.05f; 
         [SerializeField] private float shakeRandomness = 90f; 
@@ -80,8 +81,8 @@ namespace Room
                     .Join(printerView.DOScale(_startPrinterScale + scaleChangeAmount, scaleChangeDuration))
                     .Append(printerView.DOScale(_startPrinterScale, scaleChangeDuration)).OnStart(ResetPrinter);
             }
-            isActiveTrigger = true;
             
+            isActiveTrigger = true;
         }
 
         private void ResetPrinter()
@@ -95,7 +96,7 @@ namespace Room
             files.Throw(_endPoint,endTransform.forward).Forget();
                 
             _officeFileses.Push(files);
-            _endPoint.y += files.transform.localScale.y * 0.015f;
+            _endPoint.y += files.transform.localScale.y * distanceBetweenFiles;
         }
 
         public async void PickUp(Transform parentTransform) 
@@ -104,7 +105,7 @@ namespace Room
             foreach (var files in _officeFileses)
             {
                 await files.Throw(point ,parentTransform.forward, parentTransform);
-                point.y += files.transform.localScale.y * 0.015f;
+                point.y += files.transform.localScale.y * 0.02f;
             }
             
             _officeFileses.Clear();

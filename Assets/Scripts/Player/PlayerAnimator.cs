@@ -9,7 +9,8 @@ namespace Player
         private static readonly int StopWork = Animator.StringToHash("StopWork");
         private static readonly int ThrowAt = Animator.StringToHash("ThrowAtMinion");
         private static readonly int Throw = Animator.StringToHash("Throw");
-        
+        private static readonly int UpTrash = Animator.StringToHash("PickUpTrash");
+
         private readonly Animator _animator;
         
         public PlayerAnimator(Animator animator)
@@ -40,6 +41,11 @@ namespace Player
         public void ThrowObject()
         {
             _animator.SetTrigger(Throw);
+        }
+
+        public void PickUpTrash()
+        {
+            _animator.SetTrigger(UpTrash);
         }
     }
 }

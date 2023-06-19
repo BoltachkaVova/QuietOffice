@@ -102,7 +102,6 @@ namespace Player
 
         private async UniTask ThrowAt()
         {
-
             if (_pool.TryGetObject(out InventoryBase item, _type))
             {
                 _isLookAt = true;
@@ -114,7 +113,7 @@ namespace Player
                 _animator.ThrowAtEmployees();
                 await UniTask.Delay(2000);// todo Мэджик
                 
-                item.Used(true);
+                item.gameObject.SetActive(true);
                 item.Throw( point, new Vector3(360, 0, 360)).Forget();
                 
                 _isLookAt = false;
@@ -167,7 +166,6 @@ namespace Player
         private void OnSelectedTarget(SelectTargetSignal selectTarget)
         {
             _target = selectTarget.Target;
-            Debug.Log(_target.name);
         }
         
         private void OnSelectedInventory(ThrowStateSignal inventory)

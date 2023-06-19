@@ -20,13 +20,14 @@ namespace Player
         private SignalBus _signalBus;
 
         private bool _isIgnore = false;
+        
         private List<OfficeFiles> _officeFileses = new List<OfficeFiles>(20);
+        private Dictionary<TypeInventory, int> _inventory = new Dictionary<TypeInventory, int>(10);
 
         public ThrowPoint ThrowPoint => _throwPoint;
         public bool IsIgnore => _isIgnore;
         public List<OfficeFiles> OfficeFileses => _officeFileses;
-
-
+        public Dictionary<TypeInventory, int> Inventory => _inventory;
 
         [Inject]
         public void Construct(SignalBus signalBus)
@@ -42,9 +43,9 @@ namespace Player
 
         private void Start()
         {
-            
+            _signalBus.Subscribe<ThrowStateSignal>(RemoveInventory);
         }
-
+        
         private async void OnTriggerEnter(Collider other) // todo в Level просто вкл/выкл триггеры 
         {
             if (other.TryGetComponent(out TriggerWaitingBase triggerWaiting))
@@ -76,7 +77,7 @@ namespace Player
 
         private void OnDestroy()
         {
-            
+            _signalBus.Unsubscribe<ThrowStateSignal>(RemoveInventory);
         }
 
         private async void CheckTriggerWaiting(TriggerWaitingBase component)
@@ -96,17 +97,17 @@ namespace Player
                     break;
 
                 case TrashBin trashBin:
-                    Debug.Log($"Подобрали {trashBin.TrashBins[0].Inventory} мусор");
+                    foreach (var trash in trashBin.TrashBins)
+                        AddInventory(trash.Count, trash.Inventory);
                     break;
 
                 default:
                     Debug.Log($"Fail in Player {component.name}");
                     return;
             }
-
             _signalBus.Fire(new InfoInventorySignal(component.NameTrigger, component.TextInfo));
         }
-
+        
         private void CheckTriggerPerform(TriggerPerformBase trigger)
         {
             switch (trigger)
@@ -119,6 +120,20 @@ namespace Player
                     Debug.Log($"Fail in Player {trigger.name}");
                     return;
             }
+        }
+        
+        private void RemoveInventory(ThrowStateSignal key)
+        {
+            if (!_inventory.ContainsKey(key.Type)) return;
+            _inventory[key.Type] --;
+        }
+        
+        private void AddInventory(int count, TypeInventory typeInventory)
+        {
+            if (_inventory.ContainsKey(typeInventory))
+                _inventory[typeInventory] += count;
+            else
+                _inventory.Add(typeInventory, count);
         }
 
         public void OnIgnore(bool isOn)
