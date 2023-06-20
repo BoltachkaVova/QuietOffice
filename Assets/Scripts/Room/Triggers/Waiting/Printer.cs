@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Enums;
 using Interfases;
 using Inventory;
 using Pool;
+using Signals;
 using UnityEngine;
+using Zenject;
 
 namespace Room
 {
@@ -29,6 +32,7 @@ namespace Room
         [SerializeField] private float shakeRandomness = 90f; 
         [SerializeField] private int shakeVibrato = 10;
         [SerializeField] private Vector3 scaleChangeAmount = new Vector3(0.2f, 0.2f, 0f);
+        
         private float shakeDuration;  
         private float scaleChangeDuration;
         private Sequence printerSequence;
@@ -49,14 +53,14 @@ namespace Room
             foreach (var file in prefabsFiles)
                 _pool.GeneratePool(file, countGenerateFiles);
         }
-
-        private async void Start()
+        
+        private void Start()
         {
             _startPrinterScale = printerView.localScale;
             shakeDuration = scaleChangeDuration = timeSpawnFiles * 0.5f;
             
             ReturnInWorkState();
-            await StartPrinting();
+            StartPrinting().Forget();
         }
 
         private void OnDestroy()
@@ -64,7 +68,7 @@ namespace Room
             printerSequence.Kill();
         }
 
-        private async UniTask StartPrinting()
+        private async UniTaskVoid StartPrinting()
         {
             isActiveTrigger = false;
             
@@ -99,7 +103,7 @@ namespace Room
             _endPoint.y += files.transform.localScale.y * distanceBetweenFiles;
         }
 
-        public async void PickUp(Transform parentTransform) 
+        private async void PickUp(Transform parentTransform) 
         {
             var point = parentTransform.position;
             foreach (var files in _officeFileses)
@@ -111,10 +115,10 @@ namespace Room
             _officeFileses.Clear();
             ReturnInWorkState();
             
-            await StartPrinting();
+            StartPrinting().Forget();
         }
 
-        public void ReturnInWorkState()
+        private void ReturnInWorkState()
         {
             Break(false);
             Change(true);
@@ -128,6 +132,22 @@ namespace Room
         public void Change(bool isOn) // todo игрок может подложить другую бумагу
         {
             _type = isOn ? TypeInventory.Files : TypeInventory.TrashFiles;
+        }
+
+        protected override async void PlayerTriggerEnter()
+        {
+            _signal.Fire<IdleStateSignal>();
+            
+            PickUp(_player.TransformPoint);
+            await UniTask.WaitUntil(() => !isActiveTrigger);
+            
+            _signal.Fire<ActiveStateSignal>();
+            _signal.Fire(new InfoInventorySignal(nameTrigger, textInfo));
+        }
+
+        protected override void PlayerTriggerExit()
+        {
+            _player.CloseProgress();
         }
     }
 }

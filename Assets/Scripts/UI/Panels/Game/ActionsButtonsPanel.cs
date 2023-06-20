@@ -1,24 +1,15 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
+using Enums;
 using Signals;
 using UnityEngine;
 using Zenject;
 
 namespace UI
 {
-    
     public class ActionsButtonsPanel : MonoBehaviour
     {
-        private enum TypeButtons
-        {
-            None,
-            Throw,
-            StopWork
-        }
-
         private ThrowButton _throwButton;
         private StopWorkButton _stopWorkButton;
-        
         
         private SignalBus _signal;
 
@@ -55,29 +46,29 @@ namespace UI
 
         private void OnStopWork()
         {
-            ChangeButtons(TypeButtons.None);
+            ChangeButtons(TypeAction.None);
         }
 
         private void OnScatter()
         {
-            ChangeButtons(TypeButtons.Throw);
+            ChangeButtons(TypeAction.Throw);
         }
 
         private async void OnStartedWork()
         {
             await UniTask.Delay(10000);
-            ChangeButtons(TypeButtons.StopWork);
+            ChangeButtons(TypeAction.StopWork);
         }
         
         private void OnLost()
         {
-            ChangeButtons(TypeButtons.None);
+            ChangeButtons(TypeAction.None);
         }
 
-        private void ChangeButtons(TypeButtons type)
+        private void ChangeButtons(TypeAction type)
         {
-            _throwButton.gameObject.SetActive(TypeButtons.Throw == type);
-            _stopWorkButton.gameObject.SetActive(TypeButtons.StopWork == type);
+            _throwButton.gameObject.SetActive(TypeAction.Throw == type);
+            _stopWorkButton.gameObject.SetActive(TypeAction.StopWork == type);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Enums;
-
-namespace Interfases
+﻿namespace Interfases
 {
     public interface IActions
     {

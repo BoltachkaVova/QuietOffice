@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Enums;
+using Signals;
 using UnityEngine;
 
 namespace Room
@@ -8,8 +9,19 @@ namespace Room
     public class TrashBin : TriggerWaitingBase
     {
         [SerializeField] private List<ConfigTrashBin> trashBins;
-        public List<ConfigTrashBin> TrashBins => trashBins;
-        
+
+        protected override void PlayerTriggerEnter()
+        {
+            foreach (var trashBin in trashBins)
+                _player.AddInventory(trashBin.Count, trashBin.Inventory);
+            
+            _signal.Fire(new InfoInventorySignal(nameTrigger, textInfo));
+        }
+
+        protected override void PlayerTriggerExit()
+        {
+            _player.CloseProgress();
+        }
     }
     
     [Serializable]

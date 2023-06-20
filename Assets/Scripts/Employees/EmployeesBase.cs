@@ -6,10 +6,10 @@ namespace Employees
 {
     public abstract class EmployeesBase : MonoBehaviour, ISelection
     {
-        [SerializeField] protected TypeActionOnEmployees[] actionsOn;
+        [SerializeField] protected TypeAction[] actionsOn;
         
         private SelectionView selectionView;
-        public TypeActionOnEmployees[] ActionsOn => actionsOn;
+        public TypeAction[] ActionsOn => actionsOn;
         
         private void Awake()
         {

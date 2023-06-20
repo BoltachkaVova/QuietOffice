@@ -1,9 +1,10 @@
 ﻿namespace Enums
 {
-    public enum TypeActionOnEmployees
+    public enum TypeAction
     {
         None,
         Throw,
+        StopWork,
         Change,
         Break
     }

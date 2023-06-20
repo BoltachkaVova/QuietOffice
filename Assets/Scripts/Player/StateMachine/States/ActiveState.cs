@@ -5,7 +5,7 @@ namespace Player
 {
     public class ActiveState : IState
     {
-        private float _speed = 2.5f;
+        private float _speed = 2.2f;
         private float _speedRotate = 7f;
         
         private readonly PlayerAnimator _animator;

@@ -11,7 +11,6 @@ namespace Inventory
             await transform.DOJump(point, jumpPower, 1, randomDuration == 0 ? duration : randomDuration).SetEase(Ease.InOutSine)
                 .Join(transform.DORotate(rotation, duration)).SetEase(Ease.Linear).OnComplete(()=> transform.parent = parent);
         }
-
         
     }
 }
