@@ -1,31 +1,38 @@
-﻿using System;
+﻿using Player;
 using UnityEngine;
 using Zenject;
 
-namespace Room
+namespace Triggers
 {
-    public abstract class TriggerPerformBase : MonoBehaviour
+    public abstract class TriggerPerform :TriggerBase
     {
         protected SignalBus _signal;
         protected Player.Player _player;
+        protected ProgressBar _progressBar;
 
         [Inject]
-        public void Construct(SignalBus signalBus, Player.Player player)
+        public void Construct(SignalBus signalBus, Player.Player player, ProgressBar progressBar)
         {
             _signal = signalBus;
             _player = player;
+            _progressBar = progressBar;
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if(other.GetComponent<Player.Player>() && _player.IsIgnore)
+            if(!isActiveTrigger) return;
+            
+            if (other.GetComponent<Player.Player>() && !_player.IsIgnore)
                 PlayerTriggerEnter();
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if(other.GetComponent<Player.Player>())
+            if (other.GetComponent<Player.Player>())
+            {
+               _progressBar.Close(false);
                 PlayerTriggerExit();
+            }
         }
 
         protected abstract void PlayerTriggerEnter();

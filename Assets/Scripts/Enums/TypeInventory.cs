@@ -3,11 +3,11 @@
     public enum TypeInventory
     {
         None,
-        Banana,
-        Files,
+        OfficeFiles,
+        TrashOfficeFiles,
         Airplane,
+        Banana,
         TrashCup,
-        TrashFiles,
         TrashPackage,
         TrashPaper,
         TrashTinCan

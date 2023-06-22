@@ -16,7 +16,7 @@ namespace Player
         private readonly ThrowState _throwState;
         private readonly SignalBus _signalBus;
         private readonly IdleState _idleState;
-        private readonly ActionsState actionsState;
+        private readonly ActionsState _actionsState;
 
         public PlayerStateMachine(ActiveState activeState, WorkState workState,
             ThrowState throwState, SignalBus signalBus, IdleState idleState, ActionsState actionsState)
@@ -26,7 +26,7 @@ namespace Player
             _throwState = throwState;
             _signalBus = signalBus;
             _idleState = idleState;
-            this.actionsState = actionsState;
+            _actionsState = actionsState;
         }
 
         public void Initialize()
@@ -76,6 +76,7 @@ namespace Player
         
         private void OnThrow()
         {
+            _isTick = true;
             ChangeState(_throwState);   
         }
 
@@ -88,7 +89,7 @@ namespace Player
         private void OnActions()
         {
             _isTick = false;
-            ChangeState(actionsState);
+            ChangeState(_actionsState);
         }
 
     }

@@ -1,6 +1,6 @@
 ﻿namespace Signals
 {
-    public struct TargetLostSignal
+    public struct ChangeSignal
     {
         
     }

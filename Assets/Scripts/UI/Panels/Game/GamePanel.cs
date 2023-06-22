@@ -8,15 +8,15 @@ namespace UI
     public class GamePanel : MonoBehaviour
     {
         private SignalBus _signal;
-        private ThrowAtButtonsPanel _throwAtPanel;
+        private InventoryButtonsPanel inventoryPanel;
         private ActionsButtonsPanel _actionsPanel;
         
         [Inject]
-        public void Construct(SignalBus signalBus, ThrowAtButtonsPanel throwAtButtonsPanel, 
+        public void Construct(SignalBus signalBus, InventoryButtonsPanel inventoryButtonsPanel, 
             ActionsButtonsPanel actionsButtonsPanel)
         {
             _signal = signalBus;
-            _throwAtPanel = throwAtButtonsPanel;
+            inventoryPanel = inventoryButtonsPanel;
             _actionsPanel = actionsButtonsPanel;
         }
         

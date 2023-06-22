@@ -11,7 +11,6 @@ namespace Player
         private CanvasGroup _canvasGroup;
         private Image _bar;
         
-        
         private Transform _cameraTransform;
         private Coroutine _progressCoroutine;
         

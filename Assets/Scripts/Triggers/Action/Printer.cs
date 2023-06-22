@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Enums;
-using Interfases;
 using Inventory;
 using Pool;
 using Signals;
 using UnityEngine;
-using Zenject;
 
-namespace Room
+namespace Triggers
 {
-    public class Printer : TriggerWaitingBase, IActions
+    public class Printer : TriggerAction
     {
         [Header("Settings Prefabs")]
-        [SerializeField] private OfficeFiles[] prefabsFiles;
+        [SerializeField] private InventoryBase[] prefabsFiles;
         [SerializeField] private int countSpawnFiles = 20;
         [SerializeField] private int countGenerateFiles = 40;
         [SerializeField] private Vector3 startRotation;
@@ -23,6 +20,7 @@ namespace Room
         [Header("Points")]
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private Transform endTransform;
+        [SerializeField] private Transform breakPoint;
         
         [Header("Settings Animation")]
         [SerializeField] private Transform printerView;
@@ -35,20 +33,20 @@ namespace Room
         
         private float shakeDuration;  
         private float scaleChangeDuration;
+        private bool _isBreak = false;
+        
         private Sequence printerSequence;
         
         private Vector3 _startPrinterScale;
         private Vector3 _endPoint;
-
-        private bool _isBreak;
         
-        private TypeInventory _type;
-        private Stack<OfficeFiles> _officeFileses =  new Stack<OfficeFiles>(20);
-        private Pool<OfficeFiles> _pool;
+        private TypeInventory _type = TypeInventory.OfficeFiles;
+        private Stack<InventoryBase> _officeFileses =  new Stack<InventoryBase>(20);
+        private Pool<InventoryBase> _pool;
 
         private void Awake()
         {
-            _pool = new Pool<OfficeFiles>(spawnPoint);
+            _pool = new Pool<InventoryBase>(spawnPoint);
             
             foreach (var file in prefabsFiles)
                 _pool.GeneratePool(file, countGenerateFiles);
@@ -58,8 +56,7 @@ namespace Room
         {
             _startPrinterScale = printerView.localScale;
             shakeDuration = scaleChangeDuration = timeSpawnFiles * 0.5f;
-            
-            ReturnInWorkState();
+           
             StartPrinting().Forget();
         }
 
@@ -74,28 +71,32 @@ namespace Room
             
             _endPoint = endTransform.position;
             var count = countSpawnFiles;
-           
-            while (!_isBreak)
+
+            if (_isBreak)
             {
-                if(--count == 0) _isBreak = true;
+                BrokenPrinter();
+                return;
+            }
+            
+            while (!isActiveTrigger)
+            {
+                if(--count <= 0) isActiveTrigger = true;
                 
                 printerSequence = DOTween.Sequence();
-                await printerSequence
-                    .Append(printerView.DOShakePosition(shakeDuration, shakeForce, shakeVibrato, shakeRandomness))
+                await printerSequence.Append(printerView.DOShakePosition(shakeDuration, shakeForce, shakeVibrato, shakeRandomness))
                     .Join(printerView.DOScale(_startPrinterScale + scaleChangeAmount, scaleChangeDuration))
                     .Append(printerView.DOScale(_startPrinterScale, scaleChangeDuration)).OnStart(ResetPrinter);
             }
-            
-            isActiveTrigger = true;
         }
 
         private void ResetPrinter()
         {
             printerView.localScale = _startPrinterScale;
 
-            if (!_pool.TryGetObject(out OfficeFiles files, _type)) return;
+            if (!_pool.TryGetObject(out InventoryBase files, _type)) return;
             
             files.transform.rotation = Quaternion.Euler(startRotation);
+            
             files.Used(true);
             files.Throw(_endPoint,endTransform.forward).Forget();
                 
@@ -103,7 +104,12 @@ namespace Room
             _endPoint.y += files.transform.localScale.y * distanceBetweenFiles;
         }
 
-        private async void PickUp(Transform parentTransform) 
+        private void BrokenPrinter()
+        {
+            
+        }
+
+        public override async void PickUp(Transform parentTransform) 
         {
             var point = parentTransform.position;
             foreach (var files in _officeFileses)
@@ -113,41 +119,42 @@ namespace Room
             }
             
             _officeFileses.Clear();
-            ReturnInWorkState();
+            StartPrinting().Forget();
+        }
+
+        public void ReturnInWorkState()
+        {
+            _type = TypeInventory.OfficeFiles;
+            _isBreak = false;
             
             StartPrinting().Forget();
         }
 
-        private void ReturnInWorkState()
+        public override async UniTask Break() // todo игрок может сломать принтер 
         {
-            Break(false);
-            Change(true);
-        }
-
-        public void Break(bool isOn) // todo игрок может сломать принтер 
-        {
-            _isBreak = isOn;
-        }
-
-        public void Change(bool isOn) // todo игрок может подложить другую бумагу
-        {
-            _type = isOn ? TypeInventory.Files : TypeInventory.TrashFiles;
-        }
-
-        protected override async void PlayerTriggerEnter()
-        {
-            _signal.Fire<IdleStateSignal>();
+            _progressBar.Show(durationProgress, viewImage);
+            await UniTask.WaitWhile(() => _progressBar.IsActive);
             
-            PickUp(_player.TransformPoint);
-            await UniTask.WaitUntil(() => !isActiveTrigger);
+            _isBreak = true;
+        }
+
+        public override async UniTask Change() // todo игрок может подложить другую бумагу
+        {
+            _progressBar.Show(durationProgress, viewImage);
+            await UniTask.WaitWhile(() => _progressBar.IsActive);
             
-            _signal.Fire<ActiveStateSignal>();
-            _signal.Fire(new InfoInventorySignal(nameTrigger, textInfo));
+            _type = TypeInventory.TrashOfficeFiles;
+        }
+
+        protected override void PlayerTriggerEnter()
+        {
+            _signal.Fire(new SelectTriggerActionSignal(this, breakPoint)); 
+            
         }
 
         protected override void PlayerTriggerExit()
         {
-            _player.CloseProgress();
+           
         }
     }
 }

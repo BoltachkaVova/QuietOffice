@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Interfases;
 using Signals;
+using Triggers;
 using UnityEngine;
 using Zenject;
 
@@ -11,35 +12,41 @@ namespace Player
     public class ActionsState : IState, IInitializable, IDisposable
     {
         private Transform _transform;
-        private IActions _target;
+        private TriggerAction _trigger;
         
         private readonly PlayerAnimator _animator;
         private readonly Player _player;
         private readonly SignalBus _signal;
+        private readonly ProgressBar _progressBar;
 
-        public ActionsState(PlayerAnimator animator, Player player, SignalBus signal)
+        public ActionsState(PlayerAnimator animator, Player player, SignalBus signal, 
+            ProgressBar progressBar)
         {
             _animator = animator;
             _player = player;
             _signal = signal;
+            _progressBar = progressBar;
         }
         
         public void Initialize()
         {
-            _signal.Subscribe<ActionStateSignal>(OnGetPoint);
-        }
-
-        public void Dispose()
-        {
-            _signal.Unsubscribe<ActionStateSignal>(OnGetPoint);
+            _signal.Subscribe<SelectTriggerActionSignal>(OnGetSettings);
+            _signal.Subscribe<BreakSignal>(OnBreak);
+            _signal.Subscribe<ChangeSignal>(OnChange);
+            _signal.Subscribe<PickUpSignal>(OnPickUp);
         }
         
-        public async void Enter()
+        public void Dispose()
         {
-            await Move();
-            Break();
-            
-            _signal.Fire<ActiveStateSignal>();
+            _signal.Unsubscribe<SelectTriggerActionSignal>(OnGetSettings);
+            _signal.Unsubscribe<BreakSignal>(OnBreak);
+            _signal.Unsubscribe<ChangeSignal>(OnChange);
+            _signal.Unsubscribe<PickUpSignal>(OnPickUp);
+        }
+        
+        public void Enter()
+        {
+            _signal.Fire<LostTargetSignal>();
         }
 
         public void Update()
@@ -51,30 +58,50 @@ namespace Player
         {
             
         }
-
-        private void Break()
+        
+        private async void OnPickUp()
         {
-            _target.Break(true); // тип вот сломал
-            _target.Change(false); // и тут поменял файлы наверн тип нужно убрать это глупо!!!
+            _trigger.PickUp(_player.PickUpPoint);
+            await UniTask.WaitWhile(()=> _trigger.IsActiveTrigger);
+            
+            _signal.Fire<ActiveStateSignal>();
+        } 
+
+        private async void OnChange()
+        {
+            await Move();
+            await _trigger.Change();
+            
+            _signal.Fire(new InfoInventorySignal(_trigger.NameTrigger, "Измененя прошли успешно!"));
+            _signal.Fire<ActiveStateSignal>();
         }
+
+        private async void OnBreak()
+        {
+            await Move();
+            await _trigger.Break(); 
+            
+            _signal.Fire(new InfoInventorySignal(_trigger.NameTrigger, "Ты его сломал!"));
+            _signal.Fire<ActiveStateSignal>();
+        }
+        
         private async UniTask Move()
         {
-            var rotation = _transform.localRotation;
             var position = _transform.position;
             
-            _animator.Move(0.5f);
+            var direction = position -  _player.transform.position;
+            var rotation = Quaternion.LookRotation(direction);
             
-            Transform transform;
-            await (transform = _player.transform).DOMove(new Vector3(position.x, 0, position.z), 1f)  // todo Мэджик
-                .OnComplete(() => _animator.Move(0f));
+            await _player.transform.DORotateQuaternion(rotation, 0.4f).SetEase(Ease.Linear);
+            await _player.transform.DOMove(new Vector3(position.x, 0, position.z), 1f)
+                .OnStart(()=>_animator.Move(0.5f)).OnComplete(() => _animator.Move(0f));
             
-            _player.transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 2f); // todo Мэджик
         }
 
-        private void OnGetPoint(ActionStateSignal signal)
+        private void OnGetSettings(SelectTriggerActionSignal signal)
         {
-            _transform = signal.TransformObj;
-            _target = signal.Actions;
+            _trigger = signal.Action;
+            _transform = signal.Target;
         }
 
     }

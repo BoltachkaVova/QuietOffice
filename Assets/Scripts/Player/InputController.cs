@@ -66,11 +66,10 @@ namespace Player
         
         private async UniTaskVoid ResetTarget() // todo временно... нужно сделать проверку, если _target находиться в зоне видимости камеры то можно что-то делать
         {
-            await UniTask.Delay(10000); // todo Мэджик
-            _signalBus.Fire<TargetLostSignal>();
+            await UniTask.Delay(5000); // todo Мэджик
+            _signalBus.Fire<LostTargetSignal>();
             
             if(_target == null) return;
-            
             _target.ThisSelection(false);
             _target = null;
         }

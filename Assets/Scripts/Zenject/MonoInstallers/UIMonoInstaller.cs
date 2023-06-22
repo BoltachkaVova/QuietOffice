@@ -13,7 +13,7 @@ public class UIMonoInstaller : MonoInstaller
     {
         Container.Bind<GamePanel>().FromInstance(GetComponentInChildren<GamePanel>(true)).AsSingle();
         Container.Bind<InformationPanel>().FromInstance(GetComponentInChildren<InformationPanel>(true)).AsSingle();
-        Container.Bind<ThrowAtButtonsPanel>().FromInstance(GetComponentInChildren<ThrowAtButtonsPanel>(true)).AsSingle();
+        Container.Bind<InventoryButtonsPanel>().FromInstance(GetComponentInChildren<InventoryButtonsPanel>(true)).AsSingle();
         Container.Bind<ActionsButtonsPanel>().FromInstance(GetComponentInChildren<ActionsButtonsPanel>(true)).AsSingle();
     }
 }

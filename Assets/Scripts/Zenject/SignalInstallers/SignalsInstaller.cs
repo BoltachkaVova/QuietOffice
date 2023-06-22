@@ -24,8 +24,13 @@ public class SignalsInstaller : Installer<SignalsInstaller>
         Container.DeclareSignal<ActionStateSignal>();
         
         Container.DeclareSignal<SelectTargetSignal>();
-        Container.DeclareSignal<TargetLostSignal>();
+        Container.DeclareSignal<SelectTriggerActionSignal>();
+        Container.DeclareSignal<LostTargetSignal>();
         
+        Container.DeclareSignal<ShowActionsSignal>();
         Container.DeclareSignal<ScatterHereSignal>();
+        Container.DeclareSignal<ChangeSignal>();
+        Container.DeclareSignal<BreakSignal>();
+        Container.DeclareSignal<PickUpSignal>();
     }
 }

@@ -3,14 +3,13 @@ using System.Linq;
 using DG.Tweening;
 using Enums;
 using Signals;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
 namespace UI
 {
-    public class ThrowAtButtonsPanel : MonoBehaviour
+    public class InventoryButtonsPanel : MonoBehaviour
     {
         private Image _image;
 
@@ -37,7 +36,7 @@ namespace UI
         private void Start()
         {
             _signal.Subscribe<SelectTargetSignal>(OnSelectTarget);
-            _signal.Subscribe<TargetLostSignal>(OnTargetLost);
+            _signal.Subscribe<LostTargetSignal>(OnTargetLost);
             
             _signal.Subscribe<ThrowStateSignal>(OnThrow);
         }
@@ -45,14 +44,13 @@ namespace UI
         private void OnDestroy()
         {
             _signal.Unsubscribe<SelectTargetSignal>(OnSelectTarget);
-            _signal.Unsubscribe<TargetLostSignal>(OnTargetLost);
+            _signal.Unsubscribe<LostTargetSignal>(OnTargetLost);
             
             _signal.Unsubscribe<ThrowStateSignal>(OnThrow);
         }
         
         private void OnSelectTarget(SelectTargetSignal target)
         {
-            // todo добавить проверку на таргет/ что можно с ним делать? 
             ShowButtons();
         }
 
@@ -81,7 +79,7 @@ namespace UI
             }
             
             if(isEat)
-                 _image.DOFade(0.4f , 0.2f); // todo Мэджик
+                 _image.DOFade(0.4f , 0.2f); // todo Мэджик и ниже тоже 
             else
                  _signal.Fire(new InfoInventorySignal("Inventory", "Карматы твои пусты!!! найди мусорку, там что-то точно должно быть"));
         }

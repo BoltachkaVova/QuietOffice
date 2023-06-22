@@ -1,27 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Enums;
 using Signals;
 using UnityEngine;
 
-namespace Room
+namespace Triggers
 {
-    public class TrashBin : TriggerWaitingBase
+    public class TrashBin : TriggerPerform
     {
         [SerializeField] private List<ConfigTrashBin> trashBins;
 
-        protected override void PlayerTriggerEnter()
+        protected override async void PlayerTriggerEnter()
         {
+            _progressBar.Show(durationProgress, viewImage);
+            await UniTask.WaitWhile(() => _progressBar.IsActive);
+           
+            if(!_progressBar.IsDone) return;
+
             foreach (var trashBin in trashBins)
                 _player.AddInventory(trashBin.Count, trashBin.Inventory);
             
-            _signal.Fire(new InfoInventorySignal(nameTrigger, textInfo));
+            _signal.Fire(new InfoInventorySignal(NameTrigger, textInfo));
         }
 
         protected override void PlayerTriggerExit()
         {
-            _player.CloseProgress();
+           
         }
+        
     }
     
     [Serializable]

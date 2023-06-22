@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Enums;
+using Interfases;
 using Inventory;
 using Signals;
-using Room;
+using Triggers;
 using UnityEngine;
 using Zenject;
 
@@ -13,28 +14,25 @@ namespace Player
 {
     public class Player : MonoBehaviour
     {
-        [SerializeField] private Transform transformPoint;
+        [SerializeField] private Transform pickUpPoint;
 
         private ThrowPoint _throwPoint;
-        private ProgressBar _progressBar;
         private SignalBus _signalBus;
-
-        private bool _isIgnore = false;
-        private bool _isDone = false;
         
+        private bool _isIgnore = false;
+
         private List<OfficeFiles> _officeFileses = new List<OfficeFiles>(20);
         private Dictionary<TypeInventory, int> _inventory = new Dictionary<TypeInventory, int>(10);
 
         public ThrowPoint ThrowPoint => _throwPoint;
+        public Transform PickUpPoint => pickUpPoint;
         
         public bool IsIgnore => _isIgnore;
-        public bool IsDone => _isDone;
-        
+
         public List<OfficeFiles> OfficeFileses => _officeFileses;
         public Dictionary<TypeInventory, int> Inventory => _inventory;
-        public Transform TransformPoint => transformPoint;
 
-
+        
         [Inject]
         public void Construct(SignalBus signalBus)
         {
@@ -44,7 +42,6 @@ namespace Player
         private void Awake()
         {
             _throwPoint = GetComponentInChildren<ThrowPoint>();
-            _progressBar = GetComponentInChildren<ProgressBar>();
         }
 
         private void Start()
@@ -61,21 +58,6 @@ namespace Player
         private void OnDestroy()
         {
             _signalBus.Unsubscribe<ThrowStateSignal>(RemoveInventory);
-        }
-        
-        public async UniTask ShowProgress(float duration, Sprite sprite)
-        {
-            _progressBar.Show(duration, sprite);
-            await UniTask.WaitUntil(() => !_progressBar.IsActive);
-            
-            if (!_progressBar.IsDone) return;
-            _isDone = true;
-        }
-
-        public void CloseProgress()
-        {
-            _isDone = false;
-            _progressBar.Close(false);
         }
         
         public void AddInventory(int count, TypeInventory typeInventory)

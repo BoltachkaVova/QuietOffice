@@ -101,7 +101,7 @@ MonoBehaviour:
   duration: 1
   jumpPower: 4
   lifeTimeSeconds: 5
-  typeInventory: 1
+  typeInventory: 4
 --- !u!65 &522049511897073820
 BoxCollider:
   m_ObjectHideFlags: 0

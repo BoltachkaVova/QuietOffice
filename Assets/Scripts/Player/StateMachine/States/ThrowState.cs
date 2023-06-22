@@ -47,17 +47,15 @@ namespace Player
             GeneratePool();
             
             _signalBus.Subscribe<SelectTargetSignal>(OnSelectedTarget);
-            _signalBus.Subscribe<ScatterHereSignal>(OnScatterHere);
-            
             _signalBus.Subscribe<ThrowStateSignal>(OnSelectedInventory);
+            _signalBus.Subscribe<ScatterHereSignal>(OnScatterHere);
         }
         
         public void Dispose()
         {
             _signalBus.Unsubscribe<SelectTargetSignal>(OnSelectedTarget);
-            _signalBus.Unsubscribe<ScatterHereSignal>(OnScatterHere);
-            
             _signalBus.Unsubscribe<ThrowStateSignal>(OnSelectedInventory);
+            _signalBus.Unsubscribe<ScatterHereSignal>(OnScatterHere);
         }
 
         public async void Enter()
@@ -68,10 +66,14 @@ namespace Player
                     await ThrowAirplane();
                     break;
                 
-                case TypeInventory.Files:
+                case TypeInventory.OfficeFiles:
                     await ScatterFiles();
                     break;
                 
+                case TypeInventory.TrashOfficeFiles:
+                    await ScatterFiles();
+                    break;
+
                 default:
                     await ThrowAt();
                     break;
@@ -87,7 +89,7 @@ namespace Player
 
         public void Exit()
         {
-            _signalBus.Fire<TargetLostSignal>();
+            _signalBus.Fire<LostTargetSignal>();
         }
 
         private void LookAt()
@@ -170,7 +172,6 @@ namespace Player
         
         private void OnSelectedInventory(ThrowStateSignal inventory)
         {
-            if(inventory.Type == TypeInventory.None) return;
             _type = inventory.Type;
         }
         
@@ -178,7 +179,6 @@ namespace Player
         {
             _transformRoom = scatterHere.TransformRoom;
             _positionRoom = scatterHere.TransformRoom.position;
-            _type = scatterHere.Type;
         }
 
         private void GeneratePool()
