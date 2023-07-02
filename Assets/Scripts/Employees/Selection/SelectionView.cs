@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
-
-namespace Employees
+namespace Employees.Selection
 {
     public class SelectionView : MonoBehaviour
     {

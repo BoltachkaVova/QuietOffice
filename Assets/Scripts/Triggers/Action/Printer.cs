@@ -7,7 +7,7 @@ using Pool;
 using Signals;
 using UnityEngine;
 
-namespace Triggers
+namespace Triggers.Action
 {
     public class Printer : TriggerAction
     {
@@ -126,24 +126,26 @@ namespace Triggers
         {
             _type = TypeInventory.OfficeFiles;
             _isBreak = false;
-            
+
             StartPrinting().Forget();
         }
 
-        public override async UniTask Break() // todo игрок может сломать принтер 
+        public override async UniTask Break() 
         {
             _progressBar.Show(durationProgress, viewImage);
             await UniTask.WaitWhile(() => _progressBar.IsActive);
             
             _isBreak = true;
+            isActiveTrigger = false;
         }
 
-        public override async UniTask Change() // todo игрок может подложить другую бумагу
+        public override async UniTask Change() 
         {
             _progressBar.Show(durationProgress, viewImage);
             await UniTask.WaitWhile(() => _progressBar.IsActive);
             
             _type = TypeInventory.TrashOfficeFiles;
+            isActiveTrigger = false;
         }
 
         protected override void PlayerTriggerEnter()

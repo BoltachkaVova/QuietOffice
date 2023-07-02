@@ -5,17 +5,17 @@ public class SignalsInstaller : Installer<SignalsInstaller>
 {
     public override void InstallBindings()
     {
-        BildingPlayerSignals();
-        BildingTextSignals();
+        PlayerSignals();
+        TextSignals();
     }
 
-    private void BildingTextSignals()
+    private void TextSignals()
     {
         Container.DeclareSignal<InfoInventorySignal>();
     }
 
    
-    private void BildingPlayerSignals()
+    private void PlayerSignals()
     {
         Container.DeclareSignal<WorkStateSignal>();
         Container.DeclareSignal<ActiveStateSignal>();

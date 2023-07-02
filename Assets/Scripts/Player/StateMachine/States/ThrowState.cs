@@ -126,11 +126,11 @@ namespace Player
         {
             if (_pool.TryGetObject(out InventoryBase air, _type))
             {
-                var transform = air.transform;
-                transform.position = _throwPoint.transform.position;
+                var airTransform = air.transform;
+                airTransform.position = _throwPoint.transform.position;
                 
                 var player = _player.transform;
-                var direction = transform.position + player.forward.normalized * 15;
+                var direction = airTransform.position + player.forward.normalized * 15;
             
                 var target = new Vector3(direction.x, 0.1f, direction.z);
                 var rotation = new Vector3(0, player.rotation.y, 0);
@@ -145,7 +145,7 @@ namespace Player
         
         private async UniTask ScatterFiles()
         {
-            List<UniTask> tasks = new List<UniTask>(20);
+            var tasks = new List<UniTask>(20);
             
             var fileses = _player.OfficeFileses; 
             var localScale = _transformRoom.localScale;
@@ -184,6 +184,7 @@ namespace Player
         private void GeneratePool()
         {
             _pool = new Pool<InventoryBase>(_player.transform);
+            
             foreach (var item in _items)
                 _pool.GeneratePool(item, 2); // todo Мэджик !!!
         }

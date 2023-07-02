@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Enums;
 using Signals;
+using UI.Buttons.Actions;
+using UI.Buttons.Game;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace UI
+namespace UI.Panels.Game
 {
-    public enum ButtonsState 
-    {
-        None,
-        StopWork,
-        Action,
-        Throw
-    }
-
     public class ActionsButtonsPanel : MonoBehaviour
     {
         private ThrowButton _throwButton;
@@ -50,7 +44,7 @@ namespace UI
             _signal.Subscribe<WorkStateSignal>(OnStartedWork);
             _signal.Subscribe<ShowActionsSignal>(OnActionState);
             
-            _signal.Subscribe<LostTargetSignal>(OnLost);
+            _signal.Subscribe<LostTargetSignal>(OnClose);
         }
 
         private void OnDestroy()
@@ -58,7 +52,7 @@ namespace UI
             _signal.Unsubscribe<WorkStateSignal>(OnStartedWork);
             _signal.Unsubscribe<ShowActionsSignal>(OnActionState);
             
-            _signal.Unsubscribe<LostTargetSignal>(OnLost);
+            _signal.Unsubscribe<LostTargetSignal>(OnClose);
         }
         
         
@@ -74,7 +68,7 @@ namespace UI
             ChangeStateButtons(ButtonsState.StopWork);
         }
         
-        private void OnLost()
+        private void OnClose()
         { 
             ChangeStateButtons(ButtonsState.None);
         }

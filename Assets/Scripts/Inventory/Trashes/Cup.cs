@@ -2,7 +2,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace Inventory
+namespace Inventory.Trashes
 {
     public class Cup : InventoryBase
     {

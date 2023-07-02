@@ -1,4 +1,5 @@
 ﻿using Triggers;
+using Triggers.Action;
 using UnityEngine;
 
 namespace Signals

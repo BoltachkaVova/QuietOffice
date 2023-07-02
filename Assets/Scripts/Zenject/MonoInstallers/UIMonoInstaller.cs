@@ -1,4 +1,5 @@
 using UI;
+using UI.Panels.Game;
 using Zenject;
 
 public class UIMonoInstaller : MonoInstaller

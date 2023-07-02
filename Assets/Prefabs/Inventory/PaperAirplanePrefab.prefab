@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4331451506194185572}
   - component: {fileID: 5508954847247735834}
   - component: {fileID: 143385752678301970}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Regular Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7777040546908105466}
   - component: {fileID: 7777040546908105469}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PaperAirplanePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

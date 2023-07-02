@@ -4,13 +4,14 @@ using Signals;
 using UnityEngine;
 using Zenject;
 
-namespace Triggers
+namespace Triggers.Action
 {
     public abstract class TriggerAction : TriggerBase
     {
         protected SignalBus _signal;
         protected Player.Player _player;
         protected ProgressBar _progressBar;
+        
         
 
         [Inject]

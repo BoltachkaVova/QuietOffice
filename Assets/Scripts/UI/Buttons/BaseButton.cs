@@ -1,10 +1,8 @@
-﻿using System;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace UI
+namespace UI.Buttons
 {
     public abstract class BaseButton<T> : MonoBehaviour where T : struct
     {

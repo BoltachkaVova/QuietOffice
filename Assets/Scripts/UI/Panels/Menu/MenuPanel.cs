@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UI
+namespace UI.Panels.Menu
 {
     public class MenuPanel : MonoBehaviour
     {

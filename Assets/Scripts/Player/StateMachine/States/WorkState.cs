@@ -50,12 +50,11 @@ namespace Player
         {
             _animator.StayWork();
             
-            Sequence sequence = DOTween.Sequence();
+            var sequence = DOTween.Sequence();
             sequence.Append(_objTransform.DOMove(_startObjPosition, 0.8f)) // todo Мэджик
                 .Join(_player.transform.DOMove(_startObjPosition, 0.8f)).Play().SetLoops(0); // todo Мэджик
         }
         
-
         private void OnPlayerWork(WorkStateSignal obj)
         {
             _triggerTransform = obj.TriggerTransform;
@@ -66,16 +65,15 @@ namespace Player
         
         private async UniTask MoveToWorkPoint()
         {
-            var rotation = _triggerTransform.localRotation;
+            var rotation = _triggerTransform.rotation;
             var position = _triggerTransform.position;
             
-            _animator.Move(0.5f);
-            
-            Transform transform;
-            await (transform = _player.transform).DOMove(new Vector3(position.x, 0, position.z), 1f)  // todo Мэджик
-                .OnComplete(() => _animator.Move(0f));
-            
-            _player.transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 2f); // todo Мэджик
+            var sequence = DOTween.Sequence();
+            await sequence.Append(_player.transform.DOMove(new Vector3(position.x, 0, position.z), 1f)
+                    .OnStart(() => _animator.Move(0.5f)) 
+                    .OnComplete(() => _animator.Move(0f)))
+                .Append(_player.transform.DORotate(rotation.eulerAngles, 0.5f).SetEase(Ease.Linear));
+            // todo добавить что нужно сначала повернуться в сторону триггера!!! и 
         }
         
         private async UniTask StartWork()

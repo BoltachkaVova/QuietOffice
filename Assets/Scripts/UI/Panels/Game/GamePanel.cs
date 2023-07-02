@@ -1,9 +1,8 @@
-﻿using Cysharp.Threading.Tasks;
-using Signals;
+﻿using Signals;
 using UnityEngine;
 using Zenject;
 
-namespace UI
+namespace UI.Panels.Game
 {
     public class GamePanel : MonoBehaviour
     {

@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 533088552609408525}
   - component: {fileID: -1252181109022601500}
   - component: {fileID: 3707350830727889876}
-  - component: {fileID: 7128857064624787259}
-  m_Layer: 0
+  - component: {fileID: 9140712724990158842}
+  m_Layer: 7
   m_Name: CupPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1984501904239977740}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.5162971, y: 0.10592895, z: 0.4338529}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -118,8 +118,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &7128857064624787259
-BoxCollider:
+--- !u!136 &9140712724990158842
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -128,6 +128,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.20406488, y: 0.1589635, z: 0.31592476}
-  m_Center: {x: -0.0010432787, y: 0.0025555603, z: 0.0418395}
+  m_Radius: 0.1
+  m_Height: 0.3
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 0}

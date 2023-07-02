@@ -4,6 +4,7 @@ using DG.Tweening;
 using Interfases;
 using Signals;
 using Triggers;
+using Triggers.Action;
 using UnityEngine;
 using Zenject;
 
@@ -61,6 +62,8 @@ namespace Player
         
         private async void OnPickUp()
         {
+            _player.OnIgnore(true);
+            
             _trigger.PickUp(_player.PickUpPoint);
             await UniTask.WaitWhile(()=> _trigger.IsActiveTrigger);
             

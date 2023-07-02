@@ -5,7 +5,7 @@ using Enums;
 using Signals;
 using UnityEngine;
 
-namespace Triggers
+namespace Triggers.Perform
 {
     public class TrashBin : TriggerPerform
     {
@@ -13,6 +13,8 @@ namespace Triggers
 
         protected override async void PlayerTriggerEnter()
         {
+            if(_player.IsIgnore) return;
+            
             _progressBar.Show(durationProgress, viewImage);
             await UniTask.WaitWhile(() => _progressBar.IsActive);
            

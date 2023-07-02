@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 4666349778033839286}
   - component: {fileID: -425477785504077724}
   - component: {fileID: 4190885709311711284}
-  - component: {fileID: 7861478254523628366}
-  m_Layer: 0
+  - component: {fileID: 4659603298265334984}
+  m_Layer: 7
   m_Name: TinCanPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8272456523301336681}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.9, y: 0.13681775, z: 0.395}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -118,8 +118,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &7861478254523628366
-BoxCollider:
+--- !u!136 &4659603298265334984
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -128,6 +128,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.20549294, y: 0.19325617, z: 0.29104263}
-  m_Center: {x: 0.0017552413, y: 0.006773062, z: -0.0030010268}
+  m_Radius: 0.1
+  m_Height: 0.3
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 0}

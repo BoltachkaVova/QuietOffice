@@ -29,7 +29,7 @@ namespace Pool
             
             public bool TryGetObject(out T item, TypeInventory type)
             {
-                item = _pool.FirstOrDefault(ob => !ob.IsUse && ob.TypeInventory == type);
+                item = _pool.FirstOrDefault(ob => !ob.gameObject.activeSelf && ob.TypeInventory == type); // !ob.IsUse
                 return item != null;
             }
 

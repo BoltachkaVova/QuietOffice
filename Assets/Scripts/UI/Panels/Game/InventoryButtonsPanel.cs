@@ -3,11 +3,13 @@ using System.Linq;
 using DG.Tweening;
 using Enums;
 using Signals;
+using UI.Buttons.Actions;
+using UI.Buttons.Game;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace UI
+namespace UI.Panels.Game
 {
     public class InventoryButtonsPanel : MonoBehaviour
     {
@@ -69,10 +71,8 @@ namespace UI
             bool isEat = false;
             var dictionary = _player.Inventory;
             
-            foreach (var item in dictionary)
+            foreach (var item in dictionary.Where(item => item.Value > 0))
             {
-                if (item.Value <= 0) continue;
-                
                 isEat = true;
                 _dictionaryButtons[item.Key].SetCount(item.Value);
                 _dictionaryButtons[item.Key].gameObject.SetActive(true);

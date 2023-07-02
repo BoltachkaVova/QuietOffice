@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using Enums;
-using Interfases;
 using Inventory;
 using Signals;
 using Triggers;
+using Triggers.Action;
 using UnityEngine;
 using Zenject;
 
@@ -26,12 +24,10 @@ namespace Player
 
         public ThrowPoint ThrowPoint => _throwPoint;
         public Transform PickUpPoint => pickUpPoint;
-        
         public bool IsIgnore => _isIgnore;
 
         public List<OfficeFiles> OfficeFileses => _officeFileses;
         public Dictionary<TypeInventory, int> Inventory => _inventory;
-
         
         [Inject]
         public void Construct(SignalBus signalBus)

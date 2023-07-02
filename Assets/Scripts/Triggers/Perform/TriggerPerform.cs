@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace Triggers
+namespace Triggers.Perform
 {
     public abstract class TriggerPerform :TriggerBase
     {
@@ -22,7 +22,7 @@ namespace Triggers
         {
             if(!isActiveTrigger) return;
             
-            if (other.GetComponent<Player.Player>() && !_player.IsIgnore)
+            if (other.GetComponent<Player.Player>())
                 PlayerTriggerEnter();
         }
 

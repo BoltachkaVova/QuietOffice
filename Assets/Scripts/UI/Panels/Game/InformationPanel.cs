@@ -2,10 +2,11 @@
 using DG.Tweening;
 using Signals;
 using TMPro;
+using UI.Text.Game;
 using UnityEngine;
 using Zenject;
 
-namespace UI
+namespace UI.Panels.Game
 {
     public class InformationPanel : MonoBehaviour
     {
