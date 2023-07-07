@@ -16,17 +16,17 @@ namespace Player
         private readonly ThrowState _throwState;
         private readonly SignalBus _signalBus;
         private readonly IdleState _idleState;
-        private readonly ActionsState _actionsState;
+        private readonly ActionsTriggerState actionsTriggerState;
 
         public PlayerStateMachine(ActiveState activeState, WorkState workState,
-            ThrowState throwState, SignalBus signalBus, IdleState idleState, ActionsState actionsState)
+            ThrowState throwState, SignalBus signalBus, IdleState idleState, ActionsTriggerState actionsTriggerState)
         {
             _activeState = activeState;
             _workState = workState;
             _throwState = throwState;
             _signalBus = signalBus;
             _idleState = idleState;
-            _actionsState = actionsState;
+            this.actionsTriggerState = actionsTriggerState;
         }
 
         public void Initialize()
@@ -37,7 +37,7 @@ namespace Player
             _signalBus.Subscribe<ActiveStateSignal>(OnActive);
             _signalBus.Subscribe<ThrowStateSignal>(OnThrow);
             _signalBus.Subscribe<IdleStateSignal>(OnIdle);
-            _signalBus.Subscribe<ActionStateSignal>(OnActions);
+            _signalBus.Subscribe<ActionTriggerStateSignal>(OnActions);
         }
 
         public void Tick()
@@ -52,7 +52,7 @@ namespace Player
             _signalBus.Unsubscribe<ActiveStateSignal>(OnActive);
             _signalBus.Unsubscribe<ThrowStateSignal>(OnThrow);
             _signalBus.Unsubscribe<IdleStateSignal>(OnIdle);
-            _signalBus.Unsubscribe<ActionStateSignal>(OnActions);
+            _signalBus.Unsubscribe<ActionTriggerStateSignal>(OnActions);
         }
         
         private void ChangeState(IState state)
@@ -89,7 +89,7 @@ namespace Player
         private void OnActions()
         {
             _isTick = false;
-            ChangeState(_actionsState);
+            ChangeState(actionsTriggerState);
         }
 
     }

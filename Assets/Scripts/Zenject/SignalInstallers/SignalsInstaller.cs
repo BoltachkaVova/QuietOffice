@@ -11,7 +11,7 @@ public class SignalsInstaller : Installer<SignalsInstaller>
 
     private void TextSignals()
     {
-        Container.DeclareSignal<InfoInventorySignal>();
+        Container.DeclareSignal<InfoSignal>();
     }
 
    
@@ -21,7 +21,7 @@ public class SignalsInstaller : Installer<SignalsInstaller>
         Container.DeclareSignal<ActiveStateSignal>();
         Container.DeclareSignal<ThrowStateSignal>();
         Container.DeclareSignal<IdleStateSignal>();
-        Container.DeclareSignal<ActionStateSignal>();
+        Container.DeclareSignal<ActionTriggerStateSignal>();
         
         Container.DeclareSignal<SelectTargetSignal>();
         Container.DeclareSignal<SelectTriggerActionSignal>();

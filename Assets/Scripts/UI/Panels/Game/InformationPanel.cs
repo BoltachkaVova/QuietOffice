@@ -33,16 +33,16 @@ namespace UI.Panels.Game
 
         private void Start()
         {
-            _signalBus.Subscribe<InfoInventorySignal>(OnShowInfoPanel);
+            _signalBus.Subscribe<InfoSignal>(OnShowInfoPanel);
         }
         
         private void OnDestroy()
         {
-            _signalBus.Unsubscribe<InfoInventorySignal>(OnShowInfoPanel);
+            _signalBus.Unsubscribe<InfoSignal>(OnShowInfoPanel);
         }
         
 
-        private async void OnShowInfoPanel(InfoInventorySignal obj)
+        private async void OnShowInfoPanel(InfoSignal obj)
         {
             _infoText.text = obj.InfoText;
             _nameText.text = obj.NameText;

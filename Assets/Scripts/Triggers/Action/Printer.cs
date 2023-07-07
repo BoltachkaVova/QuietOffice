@@ -9,8 +9,10 @@ using UnityEngine;
 
 namespace Triggers.Action
 {
-    public class Printer : TriggerAction
+    public class Printer : BaseTriggerAction
     {
+        [Header("Special settings")]
+        
         [Header("Settings Prefabs")]
         [SerializeField] private InventoryBase[] prefabsFiles;
         [SerializeField] private int countSpawnFiles = 20;
@@ -91,12 +93,11 @@ namespace Triggers.Action
 
         private void ResetPrinter()
         {
-            printerView.localScale = _startPrinterScale;
-
             if (!_pool.TryGetObject(out InventoryBase files, _type)) return;
             
-            files.transform.rotation = Quaternion.Euler(startRotation);
+            printerView.localScale = _startPrinterScale;
             
+            files.transform.rotation = Quaternion.Euler(startRotation);
             files.Used(true);
             files.Throw(_endPoint,endTransform.forward).Forget();
                 
@@ -112,6 +113,7 @@ namespace Triggers.Action
         public override async void PickUp(Transform parentTransform) 
         {
             var point = parentTransform.position;
+            
             foreach (var files in _officeFileses)
             {
                 await files.Throw(point ,parentTransform.forward, parentTransform);
@@ -120,6 +122,8 @@ namespace Triggers.Action
             
             _officeFileses.Clear();
             StartPrinting().Forget();
+            
+            _signal.Fire(new InfoSignal(nameTrigger, textInfo));
         }
 
         public void ReturnInWorkState()

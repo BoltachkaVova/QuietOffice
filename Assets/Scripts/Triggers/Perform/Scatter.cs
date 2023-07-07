@@ -5,9 +5,11 @@ using UnityEngine;
 
 namespace Triggers.Perform
 {
-    public class Scatter : TriggerPerform
+    public class Scatter : BaseTriggerPerform
     {
+        [Header("Special settings")]
         [SerializeField] private TypeInventory tryScatterInventory;
+        [SerializeField] private Transform scatterHere;
         protected override async void PlayerTriggerEnter()
         {
             if(!_player.IsIgnore) return;
@@ -17,14 +19,14 @@ namespace Triggers.Perform
            
             if(!_progressBar.IsDone) return;
             
-            _signal.Fire(new ScatterHereSignal(transform));
+            _signal.Fire(new ScatterHereSignal(scatterHere));
             _signal.Fire(new ThrowStateSignal(tryScatterInventory));
-            _signal.Fire(new InfoInventorySignal(NameTrigger, textInfo));
+            _signal.Fire(new InfoSignal(nameTrigger, textInfo));
         }
 
         protected override void PlayerTriggerExit()
         {
-            _signal.Fire<LostTargetSignal>();
+            
         }
     }
 }

@@ -7,7 +7,7 @@ namespace UI.Buttons.Actions
         protected override void OnClick()
         {
             base.OnClick();
-            _signalBus.Fire<ActionStateSignal>();
+            _signalBus.Fire<ActionTriggerStateSignal>();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using Enums;
 using Inventory;
+using Inventory.Normal;
 using Signals;
 using Triggers;
 using Triggers.Action;

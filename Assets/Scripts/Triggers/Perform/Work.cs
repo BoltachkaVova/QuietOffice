@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace Triggers.Perform
 {
-    public class Work : TriggerPerform
+    public class Work : BaseTriggerPerform
     {
+        [Header("Special settings")]
         [SerializeField] private Transform chair;
         
         protected override async void PlayerTriggerEnter()
@@ -18,7 +19,7 @@ namespace Triggers.Perform
             if(!_progressBar.IsDone) return;
             
             _signal.Fire(new WorkStateSignal(transform, chair));
-            _signal.Fire(new InfoInventorySignal(NameTrigger, textInfo));
+            _signal.Fire(new InfoSignal(nameTrigger, textInfo));
         }
 
         protected override void PlayerTriggerExit()

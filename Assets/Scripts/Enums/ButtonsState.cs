@@ -4,7 +4,7 @@
     {
         None,
         StopWork,
-        Action,
+        ActionTrigger,
         Throw
     }
 }

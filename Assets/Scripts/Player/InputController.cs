@@ -11,7 +11,10 @@ namespace Player
     public class InputController: ITickable, IInitializable, IDisposable
     {
         private EmployeesBase _target;
-        
+
+        private int clickCount = 0;
+        private float doubleClickTime = 0.2f;
+
         private readonly SignalBus _signalBus;
         private readonly Player _player;
 
@@ -27,10 +30,11 @@ namespace Player
         
         public void Tick()
         {
-            if(_player.IsIgnore) return;
-
             if (!Input.GetMouseButtonDown(0)) return;
-            CheckSelection();
+            
+            clickCount++;
+            if (clickCount == 1)
+                HandleClicksAsync().Forget();
         }
         
         public void Dispose()
@@ -38,19 +42,34 @@ namespace Player
            
         }
         
+        private async UniTaskVoid HandleClicksAsync()
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(doubleClickTime));
+
+            if (clickCount >= 2) 
+            {
+                if (_player.IsIgnore) return;
+                CheckSelection();
+            }
+            clickCount = 0;
+        }
+     
+        
         private void CheckSelection() 
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
-            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (!Physics.Raycast(ray, out hit)) return;
-            var employess = hit.transform.GetComponent<ISelection>();
+            if (!Physics.Raycast(ray, out var hit)) return;
+            var selection = hit.transform.GetComponent<ISelection>();
 
-            if (employess == null) return;
-            switch (employess)
+            if (selection == null) return;
+            
+            switch (selection)
             {
                 case EmployeesBase target:
                     _target = target;
+                    if(!TryVisibilityEmployees()) return;
+                    
                     _signalBus.Fire(new SelectTargetSignal(_target));
                     break;
                 
@@ -59,8 +78,25 @@ namespace Player
                     return;
             }
                 
-            employess.ThisSelection(true);
+            selection.ThisSelection(true);
             ResetTarget().Forget();
+        }
+        
+        private bool TryVisibilityEmployees()
+        {
+            var position = _player.transform.position + new Vector3(0,0.5f,0);
+            var direction = (_target.transform.position - position).normalized;
+            
+            Ray ray = new Ray(position, direction);
+
+            if (Physics.Raycast(ray, out var raycastHit))
+            {
+                var employees = raycastHit.transform.GetComponent<EmployeesBase>();
+                if (employees) return true;
+            }
+            
+            _signalBus.Fire(new InfoSignal("employees", "Подойди ближе, в зону видимости"));
+            return false;
         }
         
         private async UniTaskVoid ResetTarget() // todo временно... нужно сделать проверку, если _target находиться в зоне видимости камеры то можно что-то делать

@@ -58,7 +58,7 @@ namespace UI.Panels.Game
         
         private void OnActionState()
         {
-            ChangeStateButtons(ButtonsState.Action);
+            ChangeStateButtons(ButtonsState.ActionTrigger);
         }
 
         private async void OnStartedWork()
@@ -86,7 +86,7 @@ namespace UI.Panels.Game
                     _stopWorkButton.gameObject.SetActive(true);
                     break;
                 
-                case ButtonsState.Action:
+                case ButtonsState.ActionTrigger:
                     _breakButton.gameObject.SetActive(true);
                     _changeButton.gameObject.SetActive(true);
                     _pickUpButton.gameObject.SetActive(true);

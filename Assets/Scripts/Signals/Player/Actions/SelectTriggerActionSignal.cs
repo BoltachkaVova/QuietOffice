@@ -6,18 +6,18 @@ namespace Signals
 {
     public struct SelectTriggerActionSignal
     {
-        private readonly TriggerAction _triggerAction;
+        private readonly BaseTriggerAction baseTriggerAction;
         private readonly Transform _target;
       
 
 
-        public SelectTriggerActionSignal(TriggerAction triggerAction, Transform target)
+        public SelectTriggerActionSignal(BaseTriggerAction baseTriggerAction, Transform target)
         {
-            _triggerAction = triggerAction;
+            this.baseTriggerAction = baseTriggerAction;
             _target = target;
         }
 
-        public TriggerAction Action => _triggerAction;
+        public BaseTriggerAction Action => baseTriggerAction;
 
         public Transform Target => _target;
     }

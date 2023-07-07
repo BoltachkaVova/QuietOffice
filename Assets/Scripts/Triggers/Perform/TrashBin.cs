@@ -7,8 +7,9 @@ using UnityEngine;
 
 namespace Triggers.Perform
 {
-    public class TrashBin : TriggerPerform
+    public class TrashBin : BaseTriggerPerform
     {
+        [Header("Special settings")]
         [SerializeField] private List<ConfigTrashBin> trashBins;
 
         protected override async void PlayerTriggerEnter()
@@ -23,7 +24,7 @@ namespace Triggers.Perform
             foreach (var trashBin in trashBins)
                 _player.AddInventory(trashBin.Count, trashBin.Inventory);
             
-            _signal.Fire(new InfoInventorySignal(NameTrigger, textInfo));
+            _signal.Fire(new InfoSignal(nameTrigger, textInfo));
         }
 
         protected override void PlayerTriggerExit()

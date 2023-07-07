@@ -81,7 +81,7 @@ namespace UI.Panels.Game
             if(isEat)
                  _image.DOFade(0.4f , 0.2f); // todo Мэджик и ниже тоже 
             else
-                 _signal.Fire(new InfoInventorySignal("Inventory", "Карматы твои пусты!!! найди мусорку, там что-то точно должно быть"));
+                 _signal.Fire(new InfoSignal("Inventory", "Карматы твои пусты!!! найди мусорку, там что-то точно должно быть"));
         }
 
         private void CloseButtons()
