@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Enums;
-using Inventory;
 using Inventory.Normal;
 using Signals;
-using Triggers;
 using Triggers.Action;
 using UnityEngine;
 using Zenject;
@@ -20,15 +18,15 @@ namespace Player
         
         private bool _isIgnore = false;
 
-        private List<OfficeFiles> _officeFileses = new List<OfficeFiles>(20);
+        private List<OfficeFiles> officeFiles = new List<OfficeFiles>(20);
         private Dictionary<TypeInventory, int> _inventory = new Dictionary<TypeInventory, int>(10);
 
         public ThrowPoint ThrowPoint => _throwPoint;
         public Transform PickUpPoint => pickUpPoint;
         public bool IsIgnore => _isIgnore;
 
-        public List<OfficeFiles> OfficeFileses => _officeFileses;
-        public Dictionary<TypeInventory, int> Inventory => _inventory;
+        public IEnumerable<OfficeFiles> OfficeFiles => officeFiles;
+        public IReadOnlyDictionary<TypeInventory, int> Inventory => _inventory;
         
         [Inject]
         public void Construct(SignalBus signalBus)
@@ -49,7 +47,7 @@ namespace Player
         private void OnTriggerExit(Collider other)
         {
             if (other.GetComponent<Printer>())
-                _officeFileses = GetComponentsInChildren<OfficeFiles>().ToList(); // todo временно
+                officeFiles = GetComponentsInChildren<OfficeFiles>().ToList(); // todo временно
         }
 
         private void OnDestroy()
@@ -74,9 +72,8 @@ namespace Player
         public void OnIgnore(bool isOn)
         {
             _isIgnore = isOn;
-
             if (!_isIgnore)
-                _officeFileses.Clear();
+                officeFiles.Clear();
         }
     }
 }

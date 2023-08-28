@@ -25,6 +25,7 @@ namespace Triggers.Perform
                 _player.AddInventory(trashBin.Count, trashBin.Inventory);
             
             _signal.Fire(new InfoSignal(nameTrigger, textInfo));
+            TriggerActive(false);
         }
 
         protected override void PlayerTriggerExit()

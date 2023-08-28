@@ -5,6 +5,7 @@ using Enums;
 using Inventory;
 using Pool;
 using Signals;
+using Signals.Trigger;
 using UnityEngine;
 
 namespace Triggers.Action
@@ -69,7 +70,7 @@ namespace Triggers.Action
 
         private async UniTaskVoid StartPrinting()
         {
-            isActiveTrigger = false;
+            TriggerActive(false);
             
             _endPoint = endTransform.position;
             var count = countSpawnFiles;
@@ -80,9 +81,10 @@ namespace Triggers.Action
                 return;
             }
             
-            while (!isActiveTrigger)
+            while (!IsActiveTrigger)
             {
-                if(--count <= 0) isActiveTrigger = true;
+                if(--count <= 0) 
+                    TriggerActive(true); 
                 
                 printerSequence = DOTween.Sequence();
                 await printerSequence.Append(printerView.DOShakePosition(shakeDuration, shakeForce, shakeVibrato, shakeRandomness))
@@ -124,7 +126,9 @@ namespace Triggers.Action
             StartPrinting().Forget();
             
             _signal.Fire(new InfoSignal(nameTrigger, textInfo));
+            _signal.Fire<ScatterSignal>();
         }
+
 
         public void ReturnInWorkState()
         {
@@ -140,7 +144,7 @@ namespace Triggers.Action
             await UniTask.WaitWhile(() => _progressBar.IsActive);
             
             _isBreak = true;
-            isActiveTrigger = false;
+            TriggerActive(false); 
         }
 
         public override async UniTask Change() 
@@ -149,13 +153,12 @@ namespace Triggers.Action
             await UniTask.WaitWhile(() => _progressBar.IsActive);
             
             _type = TypeInventory.TrashOfficeFiles;
-            isActiveTrigger = false;
+            TriggerActive(false); 
         }
 
         protected override void PlayerTriggerEnter()
         {
-            _signal.Fire(new SelectTriggerActionSignal(this, breakPoint)); 
-            
+            _signal.Fire(new SelectTriggerActionSignal(this, breakPoint));
         }
 
         protected override void PlayerTriggerExit()

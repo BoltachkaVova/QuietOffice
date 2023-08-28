@@ -28,8 +28,7 @@ namespace Player
         private readonly PlayerAnimator _animator;
         private readonly Player _player;
         private readonly SignalBus _signalBus;
-        
-        private readonly InventoryBase[] _items; // todo is to add to the pool
+        private readonly InventoryBase[] _items;
         
         private Pool<InventoryBase> _pool;
 
@@ -147,10 +146,10 @@ namespace Player
         {
             var tasks = new List<UniTask>(20);
             
-            var fileses = _player.OfficeFileses; 
+            var files = _player.OfficeFiles; 
             var localScale = _transformRoom.localScale;
             
-            foreach (var files in fileses)
+            foreach (var file in files)
             {
                 var randomVector = new Vector3(Random.Range(_positionRoom.x, _positionRoom.x + localScale.x),
                     _positionRoom.y,Random.Range(_positionRoom.z, _positionRoom.z + localScale.z));
@@ -158,7 +157,7 @@ namespace Player
                 var rotationY = Random.Range(0, 360);
                 var randomDuration = Random.Range(0.2f, 1f);
                 
-                tasks.Add(files.Throw(randomVector,new Vector3(0, rotationY, 0),_transformRoom, randomDuration));
+                tasks.Add(file.Throw(randomVector,new Vector3(0, rotationY, 0),_transformRoom, randomDuration));
             }
             
             await UniTask.WhenAll(tasks);

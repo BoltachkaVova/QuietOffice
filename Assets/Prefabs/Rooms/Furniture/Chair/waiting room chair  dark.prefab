@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 274724548200759676}
   - component: {fileID: 2579178504088306371}
   - component: {fileID: 8996367008622275259}
-  - component: {fileID: 967930141592043218}
-  m_Layer: 0
+  - component: {fileID: 6902801475685905460}
+  m_Layer: 14
   m_Name: waiting room chair  dark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,8 +85,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &967930141592043218
-BoxCollider:
+--- !u!135 &6902801475685905460
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -96,5 +96,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.8, y: 0.8, z: 0.8}
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}

@@ -1,6 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using Signals;
+using Signals.Trigger;
 using Triggers.Objects.Fan;
 using UnityEngine;
 
@@ -27,7 +28,9 @@ namespace Triggers.Perform
            
             if(!_progressBar.IsDone) return;
             
-            isActiveTrigger = false;
+            TriggerActive(false);
+            
+            _signal.Fire<FlyingSignal>();
             _signal.Fire(new InfoSignal(nameTrigger, $"Веселье начнется через {delay}сек, беги! чтоб тебя не заметили"));
             await UniTask.Delay(TimeSpan.FromSeconds(delay));
             
@@ -38,7 +41,7 @@ namespace Triggers.Perform
         protected override void PlayerTriggerExit()
         {
             foreach (var fan in _fans)
-                fan.ReturnNormalState();
+                fan.ReturnNormalState(); // todo временно
         }
     }
 }

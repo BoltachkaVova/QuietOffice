@@ -65,9 +65,9 @@ namespace Player
 
         private IEnumerator FillProgress()
         {
-            float elapsedTime = 0f;
-            float startFillAmount = 0;
-            float targetFillAmount = 1f;
+            var elapsedTime = 0f;
+            var startFillAmount = 0;
+            var targetFillAmount = 1f;
 
             while (elapsedTime < _durationProgress)
             {

@@ -1337,7 +1337,7 @@ GameObject:
   - component: {fileID: 5646399461840723508}
   - component: {fileID: 7852796728296366666}
   - component: {fileID: 52236334630267231}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: shelf_Floor_and_Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1424,8 +1424,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.4564661, y: 1.9179642, z: 1.6310145}
-  m_Center: {x: -0.015318042, y: -0.016518682, z: 0.0001251698}
+  m_Size: {x: 0.5, y: 2, z: 1.6}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8163620425703140629
 GameObject:
   m_ObjectHideFlags: 0

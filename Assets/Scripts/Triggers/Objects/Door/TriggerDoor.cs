@@ -36,10 +36,10 @@ namespace Triggers.Objects.Door
         {
             if (_isOpen) return;
             var transformDoor = _door.transform;
-            Vector3 characterDirection = character - transformDoor.position;
-            float dotProduct = Vector3.Dot(characterDirection.normalized, transformDoor.forward);
+            var characterDirection = character - transformDoor.position;
+            var dotProduct = Vector3.Dot(characterDirection.normalized, transformDoor.forward);
 
-            float targetAngle = dotProduct > 0f ? -openAngle : openAngle;
+            var targetAngle = dotProduct > 0f ? -openAngle : openAngle;
             _doorTween = _door.transform.DORotate(_closeRotation.eulerAngles + new Vector3(0f, targetAngle, 0f), 
                 rotationDuration).SetEase(Ease.Linear);
         }

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1580388258450772841}
   - component: {fileID: 8740061043688357290}
   - component: {fileID: 44429405964873838}
+  - component: {fileID: 526679849257678326}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -37,7 +38,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.00398}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1580388258450772841
@@ -101,6 +102,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!225 &526679849257678326
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2067198590477959283}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2146333233766205505
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,7 +127,7 @@ GameObject:
   - component: {fileID: 489118591156726164}
   - component: {fileID: 6124846487240043357}
   - component: {fileID: 8619673146124398840}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TrashbinTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +217,7 @@ MonoBehaviour:
   nameTrigger: Trashbin
   textInfo: Add inventory
   durationProgress: 2
-  isActiveTrigger: 1
+  canvasGroup: {fileID: 526679849257678326}
   trashBins:
   - inventory: 5
     count: 3

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Enums;
@@ -13,6 +14,7 @@ namespace UI.Panels.Game
 {
     public class ActionsButtonsPanel : MonoBehaviour
     {
+        [SerializeField] private int delayStopWork = 5;
         private ThrowButton _throwButton;
         private StopWorkButton _stopWorkButton;
         private ChangeButton _changeButton;
@@ -36,7 +38,7 @@ namespace UI.Panels.Game
             _breakButton = GetComponentInChildren<BreakButton>(true);
             _changeButton = GetComponentInChildren<ChangeButton>(true);
 
-            _buttonsAll = GetComponentsInChildren<Button>(true).ToList();
+            _buttonsAll = GetComponentsInChildren<Button>(true).ToList();// todo поправить! 
         }
 
         private void Start()
@@ -64,7 +66,7 @@ namespace UI.Panels.Game
         private async void OnStartedWork()
         {
             ChangeStateButtons(ButtonsState.None);
-            await UniTask.Delay(10000); // todo 
+            await UniTask.Delay(TimeSpan.FromSeconds(delayStopWork));
             ChangeStateButtons(ButtonsState.StopWork);
         }
         

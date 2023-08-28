@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using Enums;
 using Signals;
 using UnityEngine;
@@ -10,6 +11,12 @@ namespace Triggers.Perform
         [Header("Special settings")]
         [SerializeField] private TypeInventory tryScatterInventory;
         [SerializeField] private Transform scatterHere;
+
+        private void Start()
+        {
+            TriggerActive(false);
+        }
+
         protected override async void PlayerTriggerEnter()
         {
             if(!_player.IsIgnore) return;

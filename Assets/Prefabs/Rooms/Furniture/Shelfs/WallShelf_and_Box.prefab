@@ -509,7 +509,7 @@ GameObject:
   - component: {fileID: 9091316759630907267}
   - component: {fileID: 1688626933436139702}
   - component: {fileID: 3503958766226313256}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: WallShelf_and_Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}

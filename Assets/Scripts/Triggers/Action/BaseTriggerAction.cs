@@ -13,15 +13,17 @@ namespace Triggers.Action
         [SerializeField] protected string nameTrigger = "Name";
         [SerializeField] protected string textInfo= "Info";
         [SerializeField] protected int durationProgress;
-        [SerializeField] protected bool isActiveTrigger;
+        
+        [SerializeField] private CanvasGroup canvasGroup;
+        
+         private bool _isActiveTrigger;
         
         public string NameTrigger => nameTrigger;
-        public bool IsActiveTrigger => isActiveTrigger;
-       
+        public bool IsActiveTrigger => _isActiveTrigger;
         
         protected SignalBus _signal;
-        protected Player.Player _player;
         protected ProgressBar _progressBar;
+        private Player.Player _player;
         
         [Inject]
         public void Construct(SignalBus signalBus, Player.Player player, ProgressBar progressBar)
@@ -33,7 +35,7 @@ namespace Triggers.Action
 
         private void OnTriggerEnter(Collider other)
         {
-            if(!isActiveTrigger) return;
+            if(!_isActiveTrigger) return;
             if (!other.GetComponent<Player.Player>() || _player.IsIgnore) return;
             
             _signal.Fire<ShowActionsSignal>();
@@ -42,18 +44,33 @@ namespace Triggers.Action
 
         private void OnTriggerExit(Collider other)
         {
-            if(!isActiveTrigger) return;
+            if(!_isActiveTrigger) return;
             if (!other.GetComponent<Player.Player>()) return;
             
             _signal.Fire<LostTargetSignal>();
             PlayerTriggerExit();
         }
         
+        public void TriggerActive(bool isOn)
+        {
+            if (isOn)
+            {
+                canvasGroup.alpha = 1;
+                _isActiveTrigger = true;
+            }
+            else
+            {
+                canvasGroup.alpha = 0;
+                _isActiveTrigger = false;
+            }
+        }
+        
         protected abstract void PlayerTriggerEnter();
         protected abstract void PlayerTriggerExit();
-        
+
         public abstract UniTask Break();
         public abstract UniTask Change();
         public abstract void PickUp(Transform parentTransform);
+        
     }
 }

@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 51811021794718035}
   - component: {fileID: 4807417673393206084}
   - component: {fileID: 8207694964087927481}
-  - component: {fileID: 5413482298408933235}
-  m_Layer: 10
+  - component: {fileID: 3230168032720777668}
+  m_Layer: 14
   m_Name: 'coffe table Light '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5413482298408933235
+--- !u!65 &3230168032720777668
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,5 +95,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.3397604, y: 0.39270455, z: 0.8733602}
-  m_Center: {x: 0.000002861023, y: -0.06925503, z: 0.0000066757225}
+  m_Size: {x: 1.3, y: 0.3, z: 0.9}
+  m_Center: {x: 0, y: 0, z: 0}

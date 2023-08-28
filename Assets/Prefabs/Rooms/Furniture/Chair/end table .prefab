@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 728932702042175502}
   - component: {fileID: 8539271048779742551}
   - component: {fileID: 7706893750171881709}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: 'end table '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
